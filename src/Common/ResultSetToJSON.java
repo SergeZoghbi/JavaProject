@@ -20,8 +20,7 @@ public static JSONArray convertToJSON(ResultSet rs) throws SQLException, JSONExc
     JSONObject jsonObject = null;
     ResultSetMetaData rsmd = rs.getMetaData();
     int columnCount = rsmd.getColumnCount();
-    rs.next();
-    do
+    while (rs.next())
     {
         jsonObject = new JSONObject();
         for (int index = 1; index <= columnCount; index++)
@@ -57,7 +56,7 @@ public static JSONArray convertToJSON(ResultSet rs) throws SQLException, JSONExc
             }
         }
         jArray.put(jsonObject);
-    }while(rs.next());
+    }
     return jArray;
 }
 }
