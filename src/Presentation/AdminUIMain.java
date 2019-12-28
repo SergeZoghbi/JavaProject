@@ -337,21 +337,25 @@ public class AdminUIMain {
 
 
         JLabel facultyLabel = new JLabel("Faculty ");
-        JTextField facultyTextField = new JTextField();
+        String[] faculties = adminLogic.getFaculties("None");
+        JComboBox facComboBox = new JComboBox(faculties);
         popupPanel.add(facultyLabel);
-        popupPanel.add(facultyTextField);
+        popupPanel.add(facComboBox);
+
 
 
         JLabel exUniLabel = new JLabel("Old University ");
-        JTextField exUniTextArea = new JTextField();
+        String[] unies = adminLogic.getUniversities("None");
+        JComboBox uniesComboBox = new JComboBox(unies);
         popupPanel.add(exUniLabel);
-        popupPanel.add(exUniTextArea);
+        popupPanel.add(uniesComboBox);
 
 
         JLabel exSchoolLabel = new JLabel("Old School ");
-        JTextField exSchoolTextArea = new JTextField();
+        String[] schools = adminLogic.getSchools("None");
+        JComboBox schoolsComboBox = new JComboBox(schools);
         popupPanel.add(exSchoolLabel);
-        popupPanel.add(exSchoolTextArea);
+        popupPanel.add(schoolsComboBox);
 
 
         JPanel popupLowerPanel = new JPanel();
@@ -373,18 +377,34 @@ public class AdminUIMain {
         typeComboBox.addItemListener(itemEvent -> {
             if(itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")){
                 typeChosen[0] = "student";
-                exUniTextArea.setEnabled(true);
-                exSchoolTextArea.setEnabled(true);
+                uniesComboBox.setEnabled(true);
+                schoolsComboBox.setEnabled(true);
             }else{
                 typeChosen[0] = "conseiller";
-                exSchoolTextArea.setEnabled(false);
-                exUniTextArea.setEnabled(false);
+                uniesComboBox.setEnabled(false);
+                schoolsComboBox.setEnabled(false);
             }
+        });
+
+        final String[] facChosen = {"None"};
+        facComboBox.addItemListener(itemEvent -> {
+            facChosen[0] = itemEvent.getItem().toString();
+        });
+
+        final String[] oldUniChosen = {"None"};
+        uniesComboBox.addItemListener(itemEvent -> {
+            oldUniChosen[0] = itemEvent.getItem().toString();
+        });
+
+        final String[] oldSchoolChosen = {"None"};
+        schoolsComboBox.addItemListener(itemEvent -> {
+            oldSchoolChosen[0] = itemEvent.getItem().toString();
         });
 
 
         submitButton.addActionListener(actionEvent -> {
-            int isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],facultyTextField.getText(),exUniTextArea.getText(),exSchoolTextArea.getText());
+            int isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
+                    facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
             if (isAdded != -1) {
 
                 Object[][] temp = new Object[data.length+1][];
@@ -396,7 +416,7 @@ public class AdminUIMain {
                 }
 
                 temp[j] = new Object[]{ isAdded , firstNameTextArea.getText() , lastNameTextArea.getText(),
-                        typeChosen[0], facultyTextField.getText(), exUniTextArea.getText(), exSchoolTextArea.getText() };
+                        typeChosen[0], facChosen[0],  oldUniChosen[0], oldSchoolChosen[0] };
 
                 data = temp;
 
