@@ -183,15 +183,26 @@ public class AdminLogic {
 
 
     public Object[][] getFilteredUsers(String u_id) {
+        ResultSet rs = null;
+        JSONArray jsonArray = null;
         try {
-            sleep(1000);
-        } catch (InterruptedException e) {
+            rs = this.facadeClass.AccountInfo(u_id);
+               jsonArray = ResultSetToJSON.convertToJSON(rs);
+                Object[][] listOfUsers = new Object[jsonArray.length()][];
+                int i = 0;
+                for (Object json : jsonArray) {
+                    User user = new Gson().fromJson(json.toString(), User.class);
+                    listOfUsers[i] = user.returnObject();
+                    i++;
+                }
+                return listOfUsers;
+
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new Object[][]{
-//                new User("201710198" , "Michael" , "Ghosn" ,  "Etudiant" , "Engineering" , "UA" , "Antonine fathers school").returnObject(),
-//                new User("201710251" , "Serge"  , "Zoghbi" ,  "Etudiant" , "Engineering" , "UA" , "SCAin Najem").returnObject() ,
-        };
+
+        return null;
     }
 
 
