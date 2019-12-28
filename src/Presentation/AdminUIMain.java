@@ -14,7 +14,7 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 
-
+import static java.lang.Thread.sleep;
 
 
 public class AdminUIMain {
@@ -407,22 +407,11 @@ public class AdminUIMain {
 
 
         submitButton.addActionListener(actionEvent -> {
+            if(!facChosen[0].equals("None")) {
+
             int isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
                     facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
             if (isAdded != -1) {
-
-//                Object[][] temp = new Object[data.length+1][];
-//
-//                int j = 0;
-//                for(int i = 0 ; i < data.length ; i ++){
-//                    temp[j] = data[i];
-//                    j++;
-//                }
-//
-//                temp[j] = new Object[]{ isAdded , firstNameTextArea.getText() , lastNameTextArea.getText(),
-//                        typeChosen[0], facChosen[0],  oldUniChosen[0], oldSchoolChosen[0] };
-//
-//                data = temp;
 
                 new Thread(() -> {
                     jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
@@ -432,6 +421,7 @@ public class AdminUIMain {
             } else {
                 popupFrame.setForeground(Color.RED);
 
+            }
             }
         });
 
@@ -576,11 +566,7 @@ public class AdminUIMain {
 
             if (ed){
 
-                new Thread(() -> {
-
-                    jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
-
-                }).start();
+                new Thread(() -> jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()))).start();
 
 
                 popupFrame.setVisible(false);
@@ -595,11 +581,7 @@ public class AdminUIMain {
 
             if (del){
 
-                new Thread(() -> {
-
-                    jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
-
-                }).start();
+                new Thread(() -> jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()))).start();
 
 
                 popupFrame.setVisible(false);
