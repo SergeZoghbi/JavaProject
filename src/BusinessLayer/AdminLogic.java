@@ -30,7 +30,7 @@ public class AdminLogic {
     public int AddUser(String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
 
         try {
-            return  facadeClass.AddUser(fn, ln,mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type) , mapUniNameToId(oldUni));
+            return facadeClass.AddUser(fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,7 +51,7 @@ public class AdminLogic {
 
     public boolean EditUser(String id, String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
         try {
-            int resultat = facadeClass.UpdateUser(id, fn, ln,mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type) , mapUniNameToId(oldUni));
+            int resultat = facadeClass.UpdateUser(id, fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
             return resultat == 1;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -187,15 +187,15 @@ public class AdminLogic {
         JSONArray jsonArray = null;
         try {
             rs = this.facadeClass.AccountInfo(u_id);
-               jsonArray = ResultSetToJSON.convertToJSON(rs);
-                Object[][] listOfUsers = new Object[jsonArray.length()][];
-                int i = 0;
-                for (Object json : jsonArray) {
-                    User user = new Gson().fromJson(json.toString(), User.class);
-                    listOfUsers[i] = user.returnObject();
-                    i++;
-                }
-                return listOfUsers;
+            jsonArray = ResultSetToJSON.convertToJSON(rs);
+            Object[][] listOfUsers = new Object[jsonArray.length()][];
+            int i = 0;
+            for (Object json : jsonArray) {
+                User user = new Gson().fromJson(json.toString(), User.class);
+                listOfUsers[i] = user.returnObject();
+                i++;
+            }
+            return listOfUsers;
 
 
         } catch (SQLException e) {
@@ -318,7 +318,7 @@ public class AdminLogic {
     }
 
 
-    public void Logout(String id){
+    public void Logout(String id) {
         try {
             facadeClass.Log_auth(id);
         } catch (SQLException e) {
