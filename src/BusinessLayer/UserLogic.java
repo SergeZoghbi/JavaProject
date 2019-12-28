@@ -1,5 +1,9 @@
 package BusinessLayer;
 
+import Common.CharToString;
+import DataAccess.FacadeClass;
+
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,6 +11,7 @@ import static java.lang.Thread.sleep;
 
 public class UserLogic {
 
+    private FacadeClass facadeClass = FacadeClass.getInstance();
 
     public Object[] AddNewCirculaire(String titre , String faculte , String contenu) {
         return new Object[]
@@ -40,6 +45,13 @@ public class UserLogic {
     }
 
 
+    public  String CharArrayToString(char[] arr){
+        String str = "";
+        for (int i = 0 ; i < arr.length ; i++) {
+            str += arr[i];
+        }
+        return str;
+    }
 
 //    public String[] getUserInfo(String uniID){
 //        return new String[]{ uniID , "Michael" , "Ghosn" , "12345678" , "Engineering" , null , "Antonine fathers school" };
@@ -49,16 +61,16 @@ public class UserLogic {
     public void resetPassword(String uniID , char[] oldPassword , char[] newPassword){
        String oldPasswd = CharArrayToString(oldPassword);
        String newPasswd = CharArrayToString(newPassword);
-    }
 
-
-    public String CharArrayToString(char[] arr){
-        String str = "";
-        for (int i = 0 ; i < arr.length ; i++) {
-            str += arr[i];
+        try {
+            facadeClass.ChangePassword(uniID,oldPasswd,newPasswd);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return str;
     }
+
+
+
 
 
 }
