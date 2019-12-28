@@ -50,16 +50,16 @@ public class AdminLogic {
         return true;
     }
 
-    public String[] getFaculties(String fac){
+    public String[] getFaculties(String fac) {
         try {
             ArrayList<String> list = new ArrayList<>();
             ResultSet rs = facadeClass.CallGetProcedures("getAllFaculties");
-            while(rs.next()){
+            while (rs.next()) {
                 list.add(rs.getString("FACULTY_NAME"));
             }
 
             String[] allFac = new String[list.size()];
-            for(int i = 0 ; i < list.size() ; i ++ ){
+            for (int i = 0; i < list.size(); i++) {
                 allFac[i] = list.get(i);
             }
             return allFac;
@@ -171,18 +171,16 @@ public class AdminLogic {
     public Object[][] getTableData() {
         try {
             ResultSet rs = this.facadeClass.CallGetProcedures("getLastTenUsers");
-            Object[][] listOfUsers = new Object[20][];
+            Object[][] listOfUsers = new Object[10][];
+            JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
             int i = 0;
-            while (rs.next()){
-                listOfUsers[i] = new User(rs.getString("ID_UNI"),rs.getString("FIRST_NAME"),rs.getString("LAST_NAME"),rs.getString("UNIVERSITY_NAME"),
-                        rs.getString("SCHOOL_NAME"),rs.getString("FACULTY_NAME"),rs.getString("TYPE")).returnObject();
+            for (Object json : jsonArray) {
+                User user = new Gson().fromJson(json.toString(), User.class);
+                listOfUsers[i] = user.returnObject();
                 i++;
             }
 
-
-            Object[][] finalList = new Object[i][];
-            finalList = listOfUsers;
-                return finalList;
+            return listOfUsers;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -13,19 +13,7 @@ import java.util.Date;
 public class ResultSetToJSON {
 
 
-//    public static JSONArray convertToJSON(ResultSet resultSet) throws SQLException {
-//
-//        JSONArray jsonArray = new JSONArray();
-//        while (resultSet.next()) {
-//            int total_columns = resultSet.getMetaData().getColumnCount();
-//            JSONObject obj = new JSONObject();
-//            for (int i = 0; i < total_columns; i++) {
-//                obj.put(resultSet.getMetaData().getColumnLabel(i + 1).toLowerCase(), resultSet.getObject(i + 1));
-//            }
-//            jsonArray.put(obj);
-//        }
-//        return jsonArray;
-//    }
+
 public static JSONArray convertToJSON(ResultSet rs) throws SQLException, JSONException
 {
     JSONArray jArray = new JSONArray();
