@@ -50,10 +50,13 @@ public class AdminLogic {
         return true;
     }
 
+
+    ResultSet faculties;
     public String[] getFaculties(String fac){
         try {
             ArrayList<String> list = new ArrayList<>();
             ResultSet rs = facadeClass.CallGetProcedures("getAllFaculties");
+
             while(rs.next()){
                 list.add(rs.getString("FACULTY_NAME"));
             }

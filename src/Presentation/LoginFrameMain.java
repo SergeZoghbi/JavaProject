@@ -175,7 +175,6 @@ public class LoginFrameMain {
 
         LoginFrameMain x = new LoginFrameMain();
         x.run();
-        //
     }
 
 }
