@@ -1,7 +1,12 @@
 package BusinessLayer;
 
 import Common.CharToString;
+import Common.MD5;
 import DataAccess.FacadeClass;
+import Models.Circulaire;
+import com.google.gson.Gson;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -13,35 +18,53 @@ public class UserLogic {
 
     private FacadeClass facadeClass = FacadeClass.getInstance();
 
-    public Object[] AddNewCirculaire(String titre , String faculte , String contenu) {
-        return new Object[]
-                {titre , faculte , contenu , new SimpleDateFormat("dd/MM/YYYY").format(new Date()) , null};
+    public void AddNewCirculaire(String uid , String titre , String faculte , String contenu) {
+
+        facadeClass.AddCirculaire(titre,faculte,contenu);
+        try {
+            facadeClass.LogCirculaireAdded(uid);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        return new Object[]
+//                {titre , faculte , contenu , new SimpleDateFormat("dd/MM/YYYY").format(new Date()) , null};
     }
 
 
     public String[] getColumnsName() {
-        return new String[]{"Title", "Faculty", "Content", "Date", "View"};
+        return new String[]{"Title", "Date","Content",  "View"};
     }
 
     public Object[][] getTableData() {
-        return  new Object[][] {
-//                new Circulaire("PFE" , "Engineering" ,  "Michael's data aaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiooooooooooooooooooooooooooooooooooooooooooooooooooooolllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkaaaaaaaaaaaaaaaaaaaaaaa" , "01/01/2020" ).returnObject() ,
-//                new Circulaire("Rattrappage" , "Engineering"  ,  "Serge's data" , "02/01/2020" ).returnObject(),
-//                new Circulaire("PFE" , "Engineering" ,  "Michael's data aaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiooooooooooooooooooooooooooooooooooooooooooooooooooooolllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkaaaaaaaaaaaaaaaaaaaaaaa" , "01/01/2020" ).returnObject() ,
-//                new Circulaire("Rattrappage" , "Engineering"  ,  "Serge's data" , "02/01/2020" ).returnObject(),
-                };
+        DBCursor results = facadeClass.getLastCirculaire();
 
+        Object[][] listofFac = new Object[10][];
+        int i =0;
+        for (DBObject result : results) {
+            Circulaire circulaire = new Gson().fromJson(result.toString(), Circulaire.class);
+            listofFac[i] = circulaire.returnObject();
+            i++;
+        }
+        return listofFac;
     }
 
 
-    public Object[][] filterData(String date){
+    public Object[][] filterData(String uid ,String date){
         try {
-            sleep(2000);
-        } catch (Exception e1){}
-        return new Object[][] {
-//                new Circulaire("PFE" , "Engineering" ,  "Michael's data aaaaaaaaaaaaaaaaaaaaaajjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiooooooooooooooooooooooooooooooooooooooooooooooooooooolllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkaaaaaaaaaaaaaaaaaaaaaaa" , "01/01/2020" ).returnObject() ,
-//                new Circulaire("Rattrappage" , "Engineering"  ,  "Serge's data" , "02/01/2020" ).returnObject(),
-        };
+            facadeClass.LogSearch(uid,date);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DBCursor results = facadeClass.getCirculairesByDate(date);
+
+        Object[][] listofFac = new Object[results.length()][];
+        int i =0;
+        for (DBObject result : results) {
+            Circulaire circulaire = new Gson().fromJson(result.toString(), Circulaire.class);
+            listofFac[i] = circulaire.returnObject();
+            i++;
+        }
+        return listofFac;
     }
 
 
@@ -63,7 +86,7 @@ public class UserLogic {
        String newPasswd = CharArrayToString(newPassword);
 
         try {
-            facadeClass.ChangePassword(uniID,oldPasswd,newPasswd);
+            facadeClass.ChangePassword(uniID, MD5.getMd5(oldPasswd),MD5.getMd5(newPasswd));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,6 +94,14 @@ public class UserLogic {
 
 
 
+
+    public void Logout(String id) {
+        try {
+            facadeClass.Log_auth(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

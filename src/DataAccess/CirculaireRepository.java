@@ -20,15 +20,15 @@ public class CirculaireRepository {
     }
 
 
-    public void AddCirculaire(Circulaire circulaire) {
+    public void AddCirculaire(String title , String faculty_name , String content) {
 
         DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
         String date = dateFormat.format(new Date());
 
         DBObject testCirculaire = new BasicDBObject("_id", new ObjectId())
-                .append("title", circulaire.title)
-                .append("content", circulaire.content)
-                .append("faculty_name", circulaire.faculty_name)
+                .append("title", title)
+                .append("content", content)
+                .append("faculty_name", faculty_name)
                 .append("date", date);
 
         collection.insert(testCirculaire);

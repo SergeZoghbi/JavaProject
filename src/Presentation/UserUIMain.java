@@ -153,18 +153,17 @@ public class UserUIMain {
 
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
                 Date date = (Date) propertyChangeEvent.getNewValue();
-                System.out.println(dateFormat.format(date));
 
 
                 new Thread(() -> {
 
-                    data = userLogic.filterData("");
+                    data = userLogic.filterData(uni_id,dateFormat.format(date));
 
 //                        jTable.revalidate();
 //                        jTable.repaint();
 
 //                        InitializeCirculaireTablePanel();
-                    jTable.setModel(new DefaultTableModel(userLogic.filterData(dateFormat.format(date)), columnsNames));
+                    jTable.setModel(new DefaultTableModel(data, columnsNames));
 
                 }).start();
 
@@ -189,10 +188,14 @@ public class UserUIMain {
         topPanel.add(searchPanel, BorderLayout.CENTER);
 
         logoutButton.addActionListener(actionEvent -> {
+            userLogic.Logout(uni_id);
             jFrame.setVisible(false);
             new LoginFrameMain().run();
         });
-        exitButton.addActionListener(actionEvent -> System.exit(0));
+        exitButton.addActionListener(actionEvent -> {
+            userLogic.Logout(uni_id);
+            System.exit(0);
+        });
 
 
         jFrame.add(topPanel,BorderLayout.NORTH);
@@ -237,22 +240,26 @@ public class UserUIMain {
         addCirculaireButton.addActionListener(actionEvent -> {
 
             new Thread(() -> {
-                Object[][] temp = new Object[data.length+1][];
-
-                int j = 0;
-                for(int i = 0 ; i < data.length ; i ++){
-                    temp[j] = data[i];
-                    j++;
-                }
-                temp[j] = userLogic.AddNewCirculaire(titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText());
-                data = temp;
+                userLogic.AddNewCirculaire(uid , titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText());
+                data = userLogic.getTableData();
+                jTable.setModel(new DefaultTableModel(data , columnsNames));
+//                Object[][] temp = new Object[data.length+1][];
+//
+//                int j = 0;
+//                for(int i = 0 ; i < data.length ; i ++){
+//                    temp[j] = data[i];
+//                    j++;
+//                }
+//                temp[j] =
+//
+//                data = temp;
 //                data = new Object[][] {
 //                        data,
 //                        userLogic.AddNewCirculaire(titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText())
 //                };
 //                data[data.length - 1] = userLogic.AddNewCirculaire(titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText());
 //                data = userLogic.filterData("");
-                jTable.setModel(new DefaultTableModel(data, columnsNames));
+
             }).start();
 
             circFrame.setVisible(false);
@@ -326,7 +333,7 @@ public class UserUIMain {
                          JPanel topPanel = new JPanel(new GridLayout(2,1,0,0));
                          JLabel titreLabel = new JLabel("Title : " +data[row][0].toString());
                          titreLabel.setFont(new Font("SansSerif" , Font.ITALIC, 20));
-                         JLabel facultyLabel = new JLabel("Concerned Faculty : " + data[row][1].toString());
+                         JLabel facultyLabel = new JLabel("Date : " + data[row][1].toString());
                          facultyLabel.setFont(new Font("SansSerif" , Font.ITALIC, 14));
 
 
@@ -399,8 +406,9 @@ public class UserUIMain {
         jFrame.add(circulaireTablePanel, BorderLayout.CENTER);
     }
 
-
+    private String uid = "";
     public void run(String uni_id , int priority){
+        this.uid = uni_id;
         setTableDataAndColumns();
         InitializeJFrame();
         InitializeTopPanel(uni_id , priority);

@@ -216,6 +216,7 @@ public class AdminLogic {
         try {
             ResultSet rs = this.facadeClass.CallGetProcedures("getStdRepartitionPerFac");
             while (rs.next()) {
+
                 pieDataset.setValue(rs.getString("FACULTY_NAME"), Double.parseDouble(rs.getString("NB_OF_STUDENT")));
             }
 
@@ -258,6 +259,7 @@ public class AdminLogic {
         try {
             ResultSet rs = this.facadeClass.CallGetProcedures("getActivityStudent");
             while (rs.next()) {
+
                 series1.add(Double.parseDouble(rs.getString("DAY")), Double.parseDouble(rs.getString("NB_OF_STUDENT")));
             }
         } catch (SQLException e) {

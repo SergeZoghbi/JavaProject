@@ -5,6 +5,9 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
 
@@ -107,9 +110,11 @@ public class AdminUIMain {
 
     }
 
+    private DefaultPieDataset defaultPieDataset = null;
     private void addPieChart() {
+        defaultPieDataset = adminLogic.createPieChartDataset();
 
-        JFreeChart pieChart = ChartFactory.createPieChart(adminLogic.getPieChartName() , adminLogic.createPieChartDataset());
+        JFreeChart pieChart = ChartFactory.createPieChart(adminLogic.getPieChartName() , defaultPieDataset);
         pieChart.removeLegend();
 
         ChartPanel pieChartPanel = new ChartPanel(pieChart);
@@ -118,12 +123,14 @@ public class AdminUIMain {
 
     }
 
+    private DefaultCategoryDataset defaultCategoryDataset = null;
     private void addBarChart() {
 
+        defaultCategoryDataset = adminLogic.createBarChartDataset();
         JFreeChart barChart = ChartFactory.createBarChart(adminLogic.getBarChartName(),
                 "Category",
                 "Score",
-                adminLogic.createBarChartDataset(),
+                defaultCategoryDataset,
                 PlotOrientation.VERTICAL,
                 false, true, false);
 
@@ -135,13 +142,14 @@ public class AdminUIMain {
 
     }
 
+    private XYDataset xyDataset = null;
     private void addLineChart(){
-
+       xyDataset = adminLogic.createLineChartDataset();
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 adminLogic.getLineChartName(),      // chart title
                 "Day",                      // x axis label
                 "Number of Entries",                      // y axis label
-                adminLogic.createLineChartDataset(),                  // data
+                xyDataset,                  // data
                 PlotOrientation.VERTICAL,
                 true,                     // include legend
                 true,                     // tooltips
@@ -295,7 +303,12 @@ public class AdminUIMain {
 
         exitEditButton.addActionListener(actionEvent -> System.exit(0));
 
-        backEditButton.addActionListener(actionEvent -> { jFrame.setVisible(true); editFrame.setVisible(false); });
+        backEditButton.addActionListener(actionEvent -> {
+
+//            jFrame.setVisible(true);
+            run(this.adminName);
+            editFrame.setVisible(false);
+        });
 
 
 
@@ -619,8 +632,9 @@ public class AdminUIMain {
     }
 
 
-
+    private String adminName = "";
     public void run(String adminName){
+        this.adminName = adminName;
         initializeFrame();
         InitializeDashboardPanel();
         addUserManagementButton();

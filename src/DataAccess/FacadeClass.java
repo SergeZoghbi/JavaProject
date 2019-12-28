@@ -41,8 +41,8 @@ public class FacadeClass {
     }
 
 
-    public void AddCirculaire(Circulaire circulaire) {
-        this.circulaireRepository.AddCirculaire(circulaire);
+    public void AddCirculaire(String title , String faculty_name , String content) {
+        this.circulaireRepository.AddCirculaire(title, faculty_name, content);
     }
 
     public DBCursor getCirculairesByDate(String date) {
