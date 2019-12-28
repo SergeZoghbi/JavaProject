@@ -29,9 +29,13 @@ public class AdminLogic {
 
     public int AddUser(String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
 
-        System.out.println(fn + ln + type + fac + oldUni + oldSchool);
+        try {
+            return  facadeClass.AddUser(fn, ln,mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type) , mapUniNameToId(oldUni));
 
-        return 2019;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public boolean DeleteUser(String id) {
@@ -46,19 +50,25 @@ public class AdminLogic {
     }
 
     public boolean EditUser(String id, String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
-
-        System.out.println(id + fn + ln + type + fac + oldUni + oldSchool);
-
-        return true;
+        try {
+            int resultat = facadeClass.UpdateUser(id, fn, ln,mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type) , mapUniNameToId(oldUni));
+            return resultat == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
+    private int mapTypeToInt(String type) {
+        return type.equals("student") ? 2 : 3;
+    }
 
 
     private ArrayList<Faculty> faculties = new ArrayList<>();
 
-    private int mapFacNameToId(String facName){
-        for (Faculty fac: faculties) {
-            if(fac.FACULTY_NAME.equals(facName)){
+    private int mapFacNameToId(String facName) {
+        for (Faculty fac : faculties) {
+            if (fac.FACULTY_NAME.equals(facName)) {
                 return fac.ID;
             }
         }
@@ -78,7 +88,7 @@ public class AdminLogic {
             }
 
 
-            String[] allFaculties = new String[faculties.size()+1];
+            String[] allFaculties = new String[faculties.size() + 1];
             allFaculties[0] = fac_name;
             for (int i = 1; i < faculties.size(); i++) {
                 allFaculties[i] = faculties.get(i).FACULTY_NAME;
@@ -95,9 +105,9 @@ public class AdminLogic {
 
     private ArrayList<School> schools = new ArrayList<>();
 
-    private int mapSchoolNameToId(String schoolName){
-        for (School school: schools) {
-            if(school.SCHOOL_NAME.equals(schoolName)){
+    private int mapSchoolNameToId(String schoolName) {
+        for (School school : schools) {
+            if (school.SCHOOL_NAME.equals(schoolName)) {
                 return school.ID;
             }
         }
@@ -134,9 +144,9 @@ public class AdminLogic {
 
     private ArrayList<University> universities = new ArrayList<>();
 
-    private int mapUniNameToId(String uniName){
-        for (University uni: universities) {
-            if(uni.UNIVERSITY_NAME.equals(uniName)){
+    private int mapUniNameToId(String uniName) {
+        for (University uni : universities) {
+            if (uni.UNIVERSITY_NAME.equals(uniName)) {
                 return uni.ID;
             }
         }
@@ -229,7 +239,7 @@ public class AdminLogic {
 
 
     public String getLineChartName() {
-        return "Line Chart";
+        return "Users Activity";
     }
 
     public XYDataset createLineChartDataset() {
@@ -291,6 +301,15 @@ public class AdminLogic {
     public void ResetPassword(String uniID) {
         try {
             facadeClass.ResetPassword(uniID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void Logout(String id){
+        try {
+            facadeClass.Log_auth(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
