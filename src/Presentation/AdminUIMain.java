@@ -233,9 +233,12 @@ public class AdminUIMain {
 
                 if(col == columnsNames.length - 1){
 
-                    InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
-                    jTable.setModel(new DefaultTableModel(data,columnsNames));
-                    editFrame.setVisible(false);
+                        jTable.setModel(new DefaultTableModel(data , columnsNames));
+
+                    System.out.println(data[row][0].toString() + " " + data[row][1].toString() +" " + data[row][2].toString() +" " + data[row][3].toString() + " " +data[row][4].toString() +" " + data[row][5].toString() +" " + data[row][6].toString());
+                        InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
+//                        jTable.setModel(new DefaultTableModel(data,columnsNames));
+                        editFrame.setVisible(false);
 
                 }
 
@@ -407,7 +410,7 @@ public class AdminUIMain {
 
 
         submitButton.addActionListener(actionEvent -> {
-            if(!facChosen[0].equals("None")) {
+            if(!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
 
             int isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
                     facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
@@ -566,7 +569,10 @@ public class AdminUIMain {
 
             if (ed){
 
-                new Thread(() -> jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()))).start();
+                new Thread(() -> {
+                    data = adminLogic.getTableData();
+                    jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
+                }).start();
 
 
                 popupFrame.setVisible(false);
@@ -581,7 +587,10 @@ public class AdminUIMain {
 
             if (del){
 
-                new Thread(() -> jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()))).start();
+                new Thread(() -> {
+                    data = adminLogic.getTableData();
+                    jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
+                }).start();
 
 
                 popupFrame.setVisible(false);
