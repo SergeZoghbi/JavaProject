@@ -235,10 +235,7 @@ public class AdminUIMain {
 
                         jTable.setModel(new DefaultTableModel(data , columnsNames));
 
-//                        jFrame.setEnabled(false);
-//                        jTable.setEnabled(false);
-//                    jFrame.setEnabled(true);
-//                    jTable.setEnabled(true);
+
                         InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
 
 //                        jTable.setModel(new DefaultTableModel(data,columnsNames));

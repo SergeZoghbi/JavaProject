@@ -45,7 +45,6 @@ public class UserUIMain {
 
 
 
-
     private void InitializeJFrame(){
         jFrame = new JFrame();
         jFrame.setSize(screenSize.width / 2 , (int) (screenSize.height / 1.5));

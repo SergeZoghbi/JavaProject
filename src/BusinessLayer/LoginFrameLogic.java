@@ -1,9 +1,8 @@
 package BusinessLayer;
 
+import Common.CharToString;
 import Common.MD5;
 import DataAccess.FacadeClass;
-import DataAccess.UserRepository;
-import Models.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,11 +23,9 @@ public class LoginFrameLogic {
         }
         return -1;
     }
-
-
-    private String CharArrayToString(char[] arr) {
+    public  String CharArrayToString(char[] arr){
         String str = "";
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0 ; i < arr.length ; i++) {
             str += arr[i];
         }
         return str;
