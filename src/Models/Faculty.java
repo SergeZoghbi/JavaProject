@@ -1,6 +1,6 @@
 package Models;
 
 public class Faculty {
-    public Integer id;
-    public String faculty_name;
+    public Integer ID;
+    public String FACULTY_NAME;
 }

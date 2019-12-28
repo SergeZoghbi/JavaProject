@@ -61,12 +61,12 @@ public class FacadeClass {
         return this.userRepository.GetLastTenUsers();
     }
 
-    public int AddUser(User userToAdd) throws SQLException {
-        return this.userRepository.AddUser(userToAdd);
+    public int AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
+        return this.userRepository.AddUser(FIRST_NAME, LAST_NAME, id_fac, id_school, id_type, id_uni);
     }
 
-    public int UpdateUser(User userToAdd) throws SQLException {
-        return this.userRepository.UpdateUser(userToAdd);
+    public int UpdateUser(String ID_UNI, String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
+        return this.userRepository.UpdateUser(ID_UNI,FIRST_NAME,LAST_NAME,id_fac,id_school,id_type,id_uni);
     }
 
     public int ChangePassword(String UNI_ID, String Old_Pass, String New_Pass) throws SQLException {

@@ -2,9 +2,11 @@ package BusinessLayer;
 
 import Common.ResultSetToJSON;
 import DataAccess.FacadeClass;
+import Models.Faculty;
+import Models.School;
+import Models.University;
 import Models.User;
 import com.google.gson.Gson;
-import org.jfree.chart.util.ArrayUtils;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -27,9 +29,13 @@ public class AdminLogic {
 
     public int AddUser(String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
 
-        System.out.println(fn + ln + type + fac + oldUni + oldSchool);
+        try {
+            return  facadeClass.AddUser(fn, ln,mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type) , mapUniNameToId(oldUni));
 
-        return 2019;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public boolean DeleteUser(String id) {
@@ -44,89 +50,131 @@ public class AdminLogic {
     }
 
     public boolean EditUser(String id, String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
+        try {
+            int resultat = facadeClass.UpdateUser(id, fn, ln,mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type) , mapUniNameToId(oldUni));
+            return resultat == 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
-        System.out.println(id + fn + ln + type + fac + oldUni + oldSchool);
-
-        return true;
+    private int mapTypeToInt(String type) {
+        return type.equals("student") ? 2 : 3;
     }
 
 
+    private ArrayList<Faculty> faculties = new ArrayList<>();
 
-    private ResultSet faculties = null;
-    public String[] getFaculties(String fac){
+    private int mapFacNameToId(String facName) {
+        for (Faculty fac : faculties) {
+            if (fac.FACULTY_NAME.equals(facName)) {
+                return fac.ID;
+            }
+        }
+        return -1;
+    }
 
+    public String[] getFaculties(String fac_name) {
         try {
-            ArrayList<String> list = new ArrayList<>();
-            list.add(fac);
+
             ResultSet rs = facadeClass.CallGetProcedures("getAllFaculties");
-         
-          faculties = rs;
 
-            while(rs.next()){
+            JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
 
-                list.add(rs.getString("FACULTY_NAME"));
+            for (Object json : jsonArray) {
+                Faculty faculty = new Gson().fromJson(json.toString(), Faculty.class);
+                faculties.add(faculty);
             }
 
-            String[] allFac = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                allFac[i] = list.get(i);
+
+            String[] allFaculties = new String[faculties.size() + 1];
+            allFaculties[0] = fac_name;
+            for (int i = 1; i < faculties.size(); i++) {
+                allFaculties[i] = faculties.get(i).FACULTY_NAME;
             }
-            return allFac;
+            return allFaculties;
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
-
-    }
-
-    private ResultSet schools = null;
-    public String[] getSchools(String schl){
-       try {
-           ArrayList<String> list = new ArrayList<>();
-           list.add(schl);
-           ResultSet rs = facadeClass.CallGetProcedures("getAllSchools");
-           schools = rs;
-
-           while (rs.next()){
-               list.add(rs.getString("SCHOOL_NAME"));
-           }
-
-           String[] allSchools = new String[list.size()];
-           for(int i = 0 ; i < list.size() ; i ++ ){
-               allSchools[i] = list.get(i);
-           }
-           return allSchools;
-
-
-       }catch (SQLException e){
-           e.printStackTrace();
-       }
 
         return null;
     }
 
+    private ArrayList<School> schools = new ArrayList<>();
 
-    private ResultSet universities = null;
-    public String[] getUniversities(String uni){
+    private int mapSchoolNameToId(String schoolName) {
+        for (School school : schools) {
+            if (school.SCHOOL_NAME.equals(schoolName)) {
+                return school.ID;
+            }
+        }
+        return -1;
+    }
+
+    public String[] getSchools(String school) {
         try {
-            ArrayList<String> list = new ArrayList<>();
-            list.add(uni);
-            ResultSet rs = facadeClass.CallGetProcedures("getAllUniversities");
-            universities = rs;
 
-            while (rs.next()){
-                list.add(rs.getString("UNIVERSITY_NAME"));
+            ResultSet rs = facadeClass.CallGetProcedures("getAllSchools");
+
+            JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
+
+            for (Object json : jsonArray) {
+                School school1 = new Gson().fromJson(json.toString(), School.class);
+                schools.add(school1);
             }
 
-            String[] allUnis = new String[list.size()];
-            for(int i = 0 ; i < list.size() ; i ++ ){
-                allUnis[i] = list.get(i);
+
+            String[] allSchools = new String[schools.size() + 1];
+            allSchools[0] = school;
+            for (int i = 1; i < schools.size(); i++) {
+                allSchools[i] = schools.get(i).SCHOOL_NAME;
+            }
+            return allSchools;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private ArrayList<University> universities = new ArrayList<>();
+
+    private int mapUniNameToId(String uniName) {
+        for (University uni : universities) {
+            if (uni.UNIVERSITY_NAME.equals(uniName)) {
+                return uni.ID;
+            }
+        }
+        return -1;
+    }
+
+    public String[] getUniversities(String uni) {
+        try {
+
+            ResultSet rs = facadeClass.CallGetProcedures("getAllUniversities");
+
+            JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
+
+            for (Object json : jsonArray) {
+                University university = new Gson().fromJson(json.toString(), University.class);
+                universities.add(university);
+            }
+
+
+            String[] allUnis = new String[universities.size() + 1];
+            allUnis[0] = uni;
+            for (int i = 1; i < universities.size(); i++) {
+                allUnis[i] = universities.get(i).UNIVERSITY_NAME;
             }
             return allUnis;
 
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -191,7 +239,7 @@ public class AdminLogic {
 
 
     public String getLineChartName() {
-        return "Line Chart";
+        return "Users Activity";
     }
 
     public XYDataset createLineChartDataset() {
@@ -251,7 +299,20 @@ public class AdminLogic {
 
 
     public void ResetPassword(String uniID) {
-        System.out.println(uniID);
+        try {
+            facadeClass.ResetPassword(uniID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void Logout(String id){
+        try {
+            facadeClass.Log_auth(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

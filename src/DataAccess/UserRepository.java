@@ -34,34 +34,34 @@ public class UserRepository {
     }
 
 
-    public int AddUser(User userToAdd) throws SQLException {
+    public int AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
         String query = "{ ? = call addUser(?,?,?,?,?,?) }";
         this.statement = this.mySQLConnection.connection.prepareCall(query);
         this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-//        this.statement.setObject(2, userToAdd.first_name);
-//        this.statement.setObject(3, userToAdd.last_name);
-//        this.statement.setObject(4, userToAdd.faculty.id);
-//        this.statement.setObject(5, userToAdd.school.id);
-//        this.statement.setObject(6, userToAdd.type.id);
-//        this.statement.setObject(7, userToAdd.university.id);
-//        this.resultSet = this.statement.executeQuery();
+        this.statement.setObject(2, FIRST_NAME);
+        this.statement.setObject(3, LAST_NAME);
+        this.statement.setObject(4, id_fac);
+        this.statement.setObject(5, id_school);
+        this.statement.setObject(6, id_type);
+        this.statement.setObject(7, id_uni);
+        this.resultSet = this.statement.executeQuery();
         this.resultSet.next();
         return Integer.parseInt(this.resultSet.getString(1));
     }
 
-    public int UpdateUser(User userToBeUpdated) throws SQLException {
+    public int UpdateUser(String ID_UNI, String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
 
         String query = "{ ? = call updateUser(?,?,?,?,?,?,?) }";
 
         this.statement = this.mySQLConnection.connection.prepareCall(query);
         this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, userToBeUpdated.ID_UNI);
-        this.statement.setObject(3, userToBeUpdated.FIRST_NAME);
-        this.statement.setObject(4, userToBeUpdated.LAST_NAME);
-//        this.statement.setObject(5, userToBeUpdated.faculty.id);
-//        this.statement.setObject(6, userToBeUpdated.school.id);
-//        this.statement.setObject(7, userToBeUpdated.type.id);
-//        this.statement.setObject(8, userToBeUpdated.university.id);
+        this.statement.setObject(2, ID_UNI);
+        this.statement.setObject(3, FIRST_NAME);
+        this.statement.setObject(4, LAST_NAME);
+        this.statement.setObject(5, id_fac);
+        this.statement.setObject(6, id_school);
+        this.statement.setObject(7, id_type);
+        this.statement.setObject(8, id_uni);
         this.resultSet = this.statement.executeQuery();
         this.resultSet.next();
         return Integer.parseInt(this.resultSet.getString(1));

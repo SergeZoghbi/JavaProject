@@ -53,6 +53,7 @@ public class AdminUIMain {
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(actionEvent -> {
             jFrame.setVisible(false);
+            adminLogic.Logout(adminName);
             new LoginFrameMain().run();
         });
 
@@ -60,7 +61,8 @@ public class AdminUIMain {
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                 System.exit(0);
+                adminLogic.Logout(adminName);
+                System.exit(0);
             }
         });
 
@@ -230,9 +232,11 @@ public class AdminUIMain {
                 int col = jTable.columnAtPoint(mouseEvent.getPoint());
 
                 if(col == columnsNames.length - 1){
+
                     InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
                     jTable.setModel(new DefaultTableModel(data,columnsNames));
                     editFrame.setVisible(false);
+
                 }
 
             }
@@ -407,23 +411,24 @@ public class AdminUIMain {
                     facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
             if (isAdded != -1) {
 
-                Object[][] temp = new Object[data.length+1][];
+//                Object[][] temp = new Object[data.length+1][];
+//
+//                int j = 0;
+//                for(int i = 0 ; i < data.length ; i ++){
+//                    temp[j] = data[i];
+//                    j++;
+//                }
+//
+//                temp[j] = new Object[]{ isAdded , firstNameTextArea.getText() , lastNameTextArea.getText(),
+//                        typeChosen[0], facChosen[0],  oldUniChosen[0], oldSchoolChosen[0] };
+//
+//                data = temp;
 
-                int j = 0;
-                for(int i = 0 ; i < data.length ; i ++){
-                    temp[j] = data[i];
-                    j++;
-                }
+                new Thread(() -> {
+                    jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
+                    popupFrame.setVisible(false);
+                }).start();
 
-                temp[j] = new Object[]{ isAdded , firstNameTextArea.getText() , lastNameTextArea.getText(),
-                        typeChosen[0], facChosen[0],  oldUniChosen[0], oldSchoolChosen[0] };
-
-                data = temp;
-
-                jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
-
-
-                popupFrame.setVisible(false);
             } else {
                 popupFrame.setForeground(Color.RED);
 
@@ -573,29 +578,7 @@ public class AdminUIMain {
 
                 new Thread(() -> {
 
-                    Object[][] temp = new Object[data.length][];
-
-                    for(int i = 0 ; i < data.length ; i ++){
-                        if(data[i][0].equals(uniIDTextField.getText())) {
-                            temp[i] = new Object[]{
-                                    uniIDTextField.getText(),
-                                    firstNameTextArea.getText(),
-                                    lastNameTextArea.getText(),
-                                    typeChosen[0],
-                                    facChosen[0],
-                                    oldUniChosen[0],
-                                    oldSchoolChosen[0]
-                            };
-                        } else{
-                            temp[i] = data[i];
-                        }
-
-                    }
-
-
-                    data = temp;
-
-                    jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
+                    jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
 
                 }).start();
 
@@ -633,7 +616,7 @@ public class AdminUIMain {
 
         resetPassword.addActionListener(actionEvent -> {
             adminLogic.ResetPassword(uniId);
-            popupFrame.setVisible(false);
+            popupFrame.setVisible(true);
         });
 
         popupFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
