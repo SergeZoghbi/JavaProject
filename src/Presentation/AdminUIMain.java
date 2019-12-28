@@ -613,7 +613,7 @@ public class AdminUIMain {
 
         resetPassword.addActionListener(actionEvent -> {
             adminLogic.ResetPassword(uniId);
-            popupFrame.setVisible(false);
+            popupFrame.setVisible(true);
         });
 
         popupFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
