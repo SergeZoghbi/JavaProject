@@ -1,0 +1,47 @@
+package DataAccess;
+
+import Models.Circulaire;
+import com.mongodb.*;
+import org.bson.types.ObjectId;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class CirculaireRepository {
+
+    private DBCollection collection;
+
+
+   public CirculaireRepository() {
+        MongoDB mongoDB = MongoDB.getMongoDB();
+        DB database = mongoDB.mongoClient.getDB("JavaProject2020DB");
+        this.collection = database.getCollection("Circulaire");
+    }
+
+
+    public void AddCirculaire(Circulaire circulaire) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        String date = dateFormat.format(new Date());
+
+        DBObject testCirculaire = new BasicDBObject("_id", new ObjectId())
+                .append("title", circulaire.title)
+                .append("content", circulaire.content)
+                .append("faculty_name", circulaire.faculty_name)
+                .append("date", date);
+
+        collection.insert(testCirculaire);
+    }
+
+    public DBCursor getCirculairesByDate(String date) {
+        return collection.find(new BasicDBObject("date", date));
+    }
+
+    public DBCursor getLastCirculaire() {
+        DBObject sortingQuery = new BasicDBObject("$natural", -1);
+        return collection.find().sort(sortingQuery).limit(10);
+    }
+
+
+}
