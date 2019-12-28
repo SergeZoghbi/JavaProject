@@ -235,9 +235,11 @@ public class AdminUIMain {
 
                         jTable.setModel(new DefaultTableModel(data , columnsNames));
 
+
                         InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
+
 //                        jTable.setModel(new DefaultTableModel(data,columnsNames));
-                        editFrame.setVisible(false);
+
 
                 }
 
@@ -416,7 +418,8 @@ public class AdminUIMain {
             if (isAdded != -1) {
 
                 new Thread(() -> {
-                    jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
+                    data = adminLogic.getTableData();
+                    jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
                     popupFrame.setVisible(false);
                 }).start();
 
@@ -432,11 +435,12 @@ public class AdminUIMain {
     }
 
     private void InitializeEditOrDeleteUserFrame(String uniId , String fn , String ln , String usertype , String fac , String olduni , String oldschool){
-
+        editFrame.setVisible(false);
         JFrame popupFrame = new JFrame();
         popupFrame.setLayout(new BorderLayout());
         popupFrame.setSize(screenSize.width / 3,screenSize.height / 3);
         popupFrame.setResizable(false);
+        popupFrame.setVisible(true);
 //        popupFrame.setMaximumSize(new Dimension(screenSize.width / 3,screenSize.height / 3));
 //        popupFrame.setMinimumSize(new Dimension(screenSize.width / 3,screenSize.height / 3));
 //        popupFrame.setLocationRelativeTo(addUser);
@@ -610,6 +614,8 @@ public class AdminUIMain {
         });
 
         popupFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+
     }
 
 
