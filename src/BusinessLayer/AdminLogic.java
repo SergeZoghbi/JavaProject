@@ -50,11 +50,20 @@ public class AdminLogic {
         return true;
     }
 
-    public String[] getFaculties(String fac) {
+
+
+    private ResultSet faculties = null;
+    public String[] getFaculties(String fac){
+
         try {
             ArrayList<String> list = new ArrayList<>();
+            list.add(fac);
             ResultSet rs = facadeClass.CallGetProcedures("getAllFaculties");
-            while (rs.next()) {
+         
+          faculties = rs;
+
+            while(rs.next()){
+
                 list.add(rs.getString("FACULTY_NAME"));
             }
 
@@ -69,6 +78,59 @@ public class AdminLogic {
         }
         return null;
 
+    }
+
+    private ResultSet schools = null;
+    public String[] getSchools(String schl){
+       try {
+           ArrayList<String> list = new ArrayList<>();
+           list.add(schl);
+           ResultSet rs = facadeClass.CallGetProcedures("getAllSchools");
+           schools = rs;
+
+           while (rs.next()){
+               list.add(rs.getString("SCHOOL_NAME"));
+           }
+
+           String[] allSchools = new String[list.size()];
+           for(int i = 0 ; i < list.size() ; i ++ ){
+               allSchools[i] = list.get(i);
+           }
+           return allSchools;
+
+
+       }catch (SQLException e){
+           e.printStackTrace();
+       }
+
+        return null;
+    }
+
+
+    private ResultSet universities = null;
+    public String[] getUniversities(String uni){
+        try {
+            ArrayList<String> list = new ArrayList<>();
+            list.add(uni);
+            ResultSet rs = facadeClass.CallGetProcedures("getAllUniversities");
+            universities = rs;
+
+            while (rs.next()){
+                list.add(rs.getString("UNIVERSITY_NAME"));
+            }
+
+            String[] allUnis = new String[list.size()];
+            for(int i = 0 ; i < list.size() ; i ++ ){
+                allUnis[i] = list.get(i);
+            }
+            return allUnis;
+
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 

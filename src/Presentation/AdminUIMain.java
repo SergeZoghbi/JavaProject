@@ -194,6 +194,7 @@ public class AdminUIMain {
         editFrame.setSize(screenSize.width / 2 , (int) (screenSize.height/1.5));
         editFrame.setResizable(false);
 
+
         JPanel middlePanel = new JPanel();
 
         middlePanel.setLayout(new BorderLayout());
@@ -231,7 +232,7 @@ public class AdminUIMain {
                 if(col == columnsNames.length - 1){
                     InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
                     jTable.setModel(new DefaultTableModel(data,columnsNames));
-//                    editFrame.setVisible(false);
+                    editFrame.setVisible(false);
                 }
 
             }
@@ -329,7 +330,7 @@ public class AdminUIMain {
 
 
         JLabel typeLabel = new JLabel("Type ");
-        String[] type = {"Etudiant" , "Conseiller"};
+        String[] type = {"student" , "conseiller"};
         JComboBox typeComboBox = new JComboBox(type);
         popupPanel.add(typeLabel);
         popupPanel.add(typeComboBox);
@@ -368,14 +369,14 @@ public class AdminUIMain {
         popupFrame.setVisible(true);
 
 
-        final String[] typeChosen = {"Etudiant"};
+        final String[] typeChosen = {"student"};
         typeComboBox.addItemListener(itemEvent -> {
-            if(itemEvent.getItemSelectable().getSelectedObjects()[0].equals("Etudiant")){
-                typeChosen[0] = "Etudiant";
+            if(itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")){
+                typeChosen[0] = "student";
                 exUniTextArea.setEnabled(true);
                 exSchoolTextArea.setEnabled(true);
             }else{
-                typeChosen[0] = "Conseiller";
+                typeChosen[0] = "conseiller";
                 exSchoolTextArea.setEnabled(false);
                 exUniTextArea.setEnabled(false);
             }
@@ -447,7 +448,7 @@ public class AdminUIMain {
 
 
         JLabel typeLabel = new JLabel("Type ");
-        String[] type = { usertype ,"Etudiant" , "Conseiller"};
+        String[] type = { usertype ,"student" , "conseiller"};
         JComboBox userTypeComboBox = new JComboBox(type);
         popupPanel.add(typeLabel);
         popupPanel.add(userTypeComboBox);
@@ -465,15 +466,23 @@ public class AdminUIMain {
 
 
         JLabel exUniLabel = new JLabel("Old University ");
-        JTextField exUniTextArea = new JTextField(olduni);
+//        JTextField exUniTextArea = new JTextField(olduni);
+//        popupPanel.add(exUniLabel);
+//        popupPanel.add(exUniTextArea);
+        String[] unies = adminLogic.getUniversities(olduni);
+        JComboBox uniesComboBox = new JComboBox(unies);
         popupPanel.add(exUniLabel);
-        popupPanel.add(exUniTextArea);
+        popupPanel.add(uniesComboBox);
 
 
         JLabel exSchoolLabel = new JLabel("Old School ");
-        JTextField exSchoolTextArea = new JTextField(oldschool);
+//        JTextField exSchoolTextArea = new JTextField(oldschool);
+//        popupPanel.add(exSchoolLabel);
+//        popupPanel.add(exSchoolTextArea);
+        String[] schools = adminLogic.getSchools(oldschool);
+        JComboBox schoolsComboBox = new JComboBox(schools);
         popupPanel.add(exSchoolLabel);
-        popupPanel.add(exSchoolTextArea);
+        popupPanel.add(schoolsComboBox);
 
 
         JPanel popupLowerPanel = new JPanel();
@@ -501,21 +510,21 @@ public class AdminUIMain {
         final String[] typeChosen = {usertype};
 //        System.out.println(usertype);
 
-        if(!typeChosen[0].equals("Etudiant")){
-            exSchoolTextArea.setEnabled(false);
-            exUniTextArea.setEnabled(false);
+        if(!typeChosen[0].equals("student")){
+            schoolsComboBox.setEnabled(false);
+            uniesComboBox.setEnabled(false);
         }
 
         userTypeComboBox.addItemListener(itemEvent -> {
 
-            if(!itemEvent.getItemSelectable().getSelectedObjects()[0].equals("Etudiant")){
-                typeChosen[0] = "Conseiller";
-                exSchoolTextArea.setEnabled(false);
-                exUniTextArea.setEnabled(false);
+            if(!itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")){
+                typeChosen[0] = "conseiller";
+                schoolsComboBox.setEnabled(false);
+                uniesComboBox.setEnabled(false);
             }else{
-                typeChosen[0] = "Etudiant";
-                exUniTextArea.setEnabled(true);
-                exSchoolTextArea.setEnabled(true);
+                typeChosen[0] = "student";
+                uniesComboBox.setEnabled(true);
+                schoolsComboBox.setEnabled(true);
             }
 
         });
@@ -525,11 +534,20 @@ public class AdminUIMain {
             facChosen[0] = itemEvent.getItem().toString();
         });
 
+        final String[] oldUniChosen = {olduni};
+        uniesComboBox.addItemListener(itemEvent -> {
+            oldUniChosen[0] = itemEvent.getItem().toString();
+        });
+
+        final String[] oldSchoolChosen = {oldschool};
+        schoolsComboBox.addItemListener(itemEvent -> {
+            oldSchoolChosen[0] = itemEvent.getItem().toString();
+        });
 
         editButton.addActionListener(actionEvent -> {
 
             Boolean ed = adminLogic.EditUser(uniIDTextField.getText(),firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
-                    facChosen[0],exUniTextArea.getText(),exSchoolTextArea.getText());
+                    facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
 
             if (ed){
 
@@ -545,8 +563,8 @@ public class AdminUIMain {
                                     lastNameTextArea.getText(),
                                     typeChosen[0],
                                     facChosen[0],
-                                    exUniTextArea.getText(),
-                                    exSchoolTextArea.getText()
+                                    oldUniChosen[0],
+                                    oldSchoolChosen[0]
                             };
                         } else{
                             temp[i] = data[i];
@@ -563,7 +581,7 @@ public class AdminUIMain {
 
 
                 popupFrame.setVisible(false);
-//                editFrame.setVisible(true);
+                editFrame.setVisible(true);
             } else {
                 System.out.println("Not edited");
             }
@@ -576,27 +594,13 @@ public class AdminUIMain {
 
                 new Thread(() -> {
 
-//                    Object[][] temp = new Object[data.length - 1][];
-//
-//                    int j = 0 ;
-//                    for(int i = 0 ; i < data.length ; i ++){
-//                        if( !data[i][0].equals(uniIDTextField.getText()) ){
-//                            temp[j] = data[i];
-//                            j++;
-//                        }
-//
-//                    }
-//
-//
-//                    data = temp;
-
                     jTable.setModel(new DefaultTableModel(adminLogic.getTableData(), adminLogic.getColumnNames()));
 
                 }).start();
 
 
                 popupFrame.setVisible(false);
-//                editFrame.setVisible(true);
+                editFrame.setVisible(true);
             } else {
                 System.out.println("Not deleted");
             }
@@ -604,7 +608,7 @@ public class AdminUIMain {
 
         cancelButton.addActionListener(actionEvent -> {
             popupFrame.setVisible(false);
-//            editFrame.setVisible(true);
+            editFrame.setVisible(true);
         });
 
         resetPassword.addActionListener(actionEvent -> {
