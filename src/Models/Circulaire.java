@@ -8,7 +8,7 @@ public class Circulaire {
 
     public Object[] returnObject(){
         return new Object[]
-                { title  , date , title , null };
+                { title  , date , content , null };
     }
 
 }

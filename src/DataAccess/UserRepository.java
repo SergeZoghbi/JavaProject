@@ -26,6 +26,15 @@ public class UserRepository {
         return this.resultSet;
     }
 
+    public ResultSet getFacultyName(String UNI_ID) throws SQLException {
+        String query = "{ call getFacultyName(?) }";
+        this.statement = this.mySQLConnection.connection.prepareCall(query);
+        this.statement.setObject(1, UNI_ID);
+        this.resultSet = this.statement.executeQuery();
+        return this.resultSet;
+    }
+
+
     public ResultSet GetLastTenUsers() throws SQLException {
         String query = "{ call getLastTenUsers() }";
         this.statement = this.mySQLConnection.connection.prepareCall(query);

@@ -4,10 +4,12 @@ import Common.CharToString;
 import Common.MD5;
 import DataAccess.FacadeClass;
 import Models.Circulaire;
+import Models.User;
 import com.google.gson.Gson;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +17,9 @@ import java.util.Date;
 import static java.lang.Thread.sleep;
 
 public class UserLogic {
+
+
+
 
     private FacadeClass facadeClass = FacadeClass.getInstance();
 
@@ -35,8 +40,8 @@ public class UserLogic {
         return new String[]{"Title", "Date","Content",  "View"};
     }
 
-    public Object[][] getTableData() {
-        DBCursor results = facadeClass.getLastCirculaire();
+    public Object[][] getTableData(String uid) {
+        DBCursor results = facadeClass.getLastCirculaire(getFacName(uid));
 
         Object[][] listofFac = new Object[10][];
         int i =0;
@@ -55,13 +60,14 @@ public class UserLogic {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        DBCursor results = facadeClass.getCirculairesByDate(date);
+        DBCursor results = facadeClass.getCirculairesByDate(date,getFacName(uid));
 
         Object[][] listofFac = new Object[results.length()][];
         int i =0;
         for (DBObject result : results) {
             Circulaire circulaire = new Gson().fromJson(result.toString(), Circulaire.class);
             listofFac[i] = circulaire.returnObject();
+            System.out.println(result.toString());
             i++;
         }
         return listofFac;
@@ -90,6 +96,18 @@ public class UserLogic {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getFacName(String uid){
+        try {
+
+            ResultSet rs = facadeClass.getFacultyName(uid);
+            rs.next();
+            return rs.getString("FACULTY_NAME");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

@@ -34,13 +34,13 @@ public class CirculaireRepository {
         collection.insert(testCirculaire);
     }
 
-    public DBCursor getCirculairesByDate(String date) {
+    public DBCursor getCirculairesByDate(String date,String facName) {
         return collection.find(new BasicDBObject("date", date));
     }
 
-    public DBCursor getLastCirculaire() {
+    public DBCursor getLastCirculaire(String Fac_name ){
         DBObject sortingQuery = new BasicDBObject("$natural", -1);
-        return collection.find().sort(sortingQuery).limit(10);
+        return collection.find(new BasicDBObject("faculty_name",Fac_name)).sort(sortingQuery).limit(10);
     }
 
 

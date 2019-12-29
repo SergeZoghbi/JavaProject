@@ -45,21 +45,22 @@ public class FacadeClass {
         this.circulaireRepository.AddCirculaire(title, faculty_name, content);
     }
 
-    public DBCursor getCirculairesByDate(String date) {
-        return this.circulaireRepository.getCirculairesByDate(date);
+    public DBCursor getCirculairesByDate(String date,String Fac_name) {
+        return this.circulaireRepository.getCirculairesByDate(date,Fac_name);
     }
 
-    public DBCursor getLastCirculaire() {
-        return this.circulaireRepository.getLastCirculaire();
+    public DBCursor getLastCirculaire(String facName) {
+        return this.circulaireRepository.getLastCirculaire(facName);
     }
 
     public ResultSet AccountInfo(String UNI_ID) throws SQLException {
         return this.userRepository.AccountInfo(UNI_ID);
     }
 
-    public ResultSet AccountInfo() throws SQLException {
-        return this.userRepository.GetLastTenUsers();
+    public ResultSet getFacultyName(String UNI_ID) throws SQLException {
+        return this.userRepository.getFacultyName(UNI_ID);
     }
+
 
     public int AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
         return this.userRepository.AddUser(FIRST_NAME, LAST_NAME, id_fac, id_school, id_type, id_uni);

@@ -40,7 +40,7 @@ public class UserUIMain {
 
     public void setTableDataAndColumns(){
         this.columnsNames = userLogic.getColumnsName();
-        this.data = userLogic.getTableData();
+        this.data = userLogic.getTableData(uid);
     }
 
 
@@ -224,7 +224,8 @@ public class UserUIMain {
         JPanel facPanel = new JPanel();
         facPanel.setLayout(new GridLayout(1,2,0,0));
         facPanel.add(new JLabel("Faculty : "));
-        JTextField facField = new JTextField();
+        JTextField facField = new JTextField(userLogic.getFacName(uid));
+        facField.setEnabled(false);
         facPanel.add(facField);
         facPanel.setBackground(new Color(255,255,255));
 
@@ -240,8 +241,8 @@ public class UserUIMain {
         addCirculaireButton.addActionListener(actionEvent -> {
 
             new Thread(() -> {
-                userLogic.AddNewCirculaire(uid , titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText());
-                data = userLogic.getTableData();
+                userLogic.AddNewCirculaire(uid , titleField.getText() , userLogic.getFacName(uid), contenuCirculaireTextArea.getText());
+                data = userLogic.getTableData(uid);
                 jTable.setModel(new DefaultTableModel(data , columnsNames));
 //                Object[][] temp = new Object[data.length+1][];
 //
@@ -284,6 +285,7 @@ public class UserUIMain {
         JPanel circulaireTablePanel = new JPanel();
 
         circulaireTablePanel.setLayout(new BorderLayout());
+
 
 
         TableModel tableModel = new DefaultTableModel(data, columnsNames);
