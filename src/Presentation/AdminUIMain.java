@@ -10,44 +10,49 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
-
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-
 import java.awt.*;
-import java.awt.event.*;
-
-import static java.lang.Thread.sleep;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 
 public class AdminUIMain {
 
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private AdminLogic adminLogic;
-
-    public AdminUIMain(){
-        adminLogic = new AdminLogic();
-    }
-
-   private JFrame jFrame;
+    private JFrame jFrame;
 
     private JPanel firstTwoChartsPanel;
-   private JPanel thirdChartPanel;
+    private JPanel thirdChartPanel;
+    private DefaultPieDataset defaultPieDataset = null;
+    private DefaultCategoryDataset defaultCategoryDataset = null;
+    private XYDataset xyDataset = null;
+    private JFrame editFrame;
+    private JTable jTable;
+    private Object[][] data = null;
+    private String adminName = "";
 
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public AdminUIMain() {
+        adminLogic = new AdminLogic();
+        adminLogic.fillUniverstiesArrayList();
+        adminLogic.fillSchoolArrayList();
+        adminLogic.fillFacultiesArrayList();
+    }
 
-
-    private void initializeFrame(){
+    private void initializeFrame() {
         jFrame = new JFrame();
-        jFrame.setSize(screenSize.width/2, (int) (screenSize.height/1.5));
+        jFrame.setSize(screenSize.width / 2, (int) (screenSize.height / 1.5));
         jFrame.setLayout(new BorderLayout());
         jFrame.setResizable(false);
-}
+    }
 
-
-    private void initializeTopPanel(String adminName){
+    private void initializeTopPanel(String adminName) {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
-        topPanel.setBackground(new Color(255,255,255));
+        topPanel.setBackground(new Color(255, 255, 255));
         topPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
         JPanel rightPanel = new JPanel();
@@ -71,7 +76,7 @@ public class AdminUIMain {
 
         rightPanel.add(logoutButton);
         rightPanel.add(exitButton);
-        rightPanel.setBackground(new Color(255,255,255));
+        rightPanel.setBackground(new Color(255, 255, 255));
         topPanel.add(rightPanel, BorderLayout.EAST);
 
         JLabel adminNameLabel = new JLabel("Logged in as " + adminName);
@@ -81,24 +86,20 @@ public class AdminUIMain {
 
     }
 
-
-
-
-
-    private void InitializeDashboardPanel(){
+    private void InitializeDashboardPanel() {
 
         JPanel jPanel = new JPanel();
-        jPanel.setLayout(new GridLayout(2,1,0,0));
+        jPanel.setLayout(new GridLayout(2, 1, 0, 0));
         jPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-        jPanel.setBackground(new Color(250,250,250 , 250 ));
+        jPanel.setBackground(new Color(250, 250, 250, 250));
 
 
         firstTwoChartsPanel = new JPanel();
-        firstTwoChartsPanel.setLayout(new GridLayout(1,2,0,0));
+        firstTwoChartsPanel.setLayout(new GridLayout(1, 2, 0, 0));
         jPanel.add(firstTwoChartsPanel);
 
         thirdChartPanel = new JPanel();
-        thirdChartPanel.setLayout(new GridLayout(1,1,0,0));
+        thirdChartPanel.setLayout(new GridLayout(1, 1, 0, 0));
         jPanel.add(thirdChartPanel);
 
         jFrame.add(jPanel, BorderLayout.CENTER);
@@ -110,11 +111,10 @@ public class AdminUIMain {
 
     }
 
-    private DefaultPieDataset defaultPieDataset = null;
     private void addPieChart() {
         defaultPieDataset = adminLogic.createPieChartDataset();
 
-        JFreeChart pieChart = ChartFactory.createPieChart(adminLogic.getPieChartName() , defaultPieDataset);
+        JFreeChart pieChart = ChartFactory.createPieChart(adminLogic.getPieChartName(), defaultPieDataset);
         pieChart.removeLegend();
 
         ChartPanel pieChartPanel = new ChartPanel(pieChart);
@@ -123,7 +123,6 @@ public class AdminUIMain {
 
     }
 
-    private DefaultCategoryDataset defaultCategoryDataset = null;
     private void addBarChart() {
 
         defaultCategoryDataset = adminLogic.createBarChartDataset();
@@ -142,9 +141,8 @@ public class AdminUIMain {
 
     }
 
-    private XYDataset xyDataset = null;
-    private void addLineChart(){
-       xyDataset = adminLogic.createLineChartDataset();
+    private void addLineChart() {
+        xyDataset = adminLogic.createLineChartDataset();
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 adminLogic.getLineChartName(),      // chart title
                 "Day",                      // x axis label
@@ -163,15 +161,11 @@ public class AdminUIMain {
 
     }
 
-
-
-
-
-    private void addUserManagementButton(){
+    private void addUserManagementButton() {
 
         JPanel lowerPanel = new JPanel();
         lowerPanel.setBorder(BorderFactory.createEmptyBorder());
-        lowerPanel.setBackground(new Color(255,255,255));
+        lowerPanel.setBackground(new Color(255, 255, 255));
 
         JButton editUser = new JButton("Manage Users");
 
@@ -185,36 +179,19 @@ public class AdminUIMain {
 
     }
 
-
-
-
-
-
-
-
-    private JFrame editFrame;
-    private JTable jTable;
-
-    private Object[][] data = null;
-
-
-    private void InitializeEditFrame(){
+    private void InitializeEditFrame() {
         editFrame = new JFrame();
         editFrame.setLayout(new BorderLayout());
-        editFrame.setSize(screenSize.width / 2 , (int) (screenSize.height/1.5));
+        editFrame.setSize(screenSize.width / 2, (int) (screenSize.height / 1.5));
         editFrame.setResizable(false);
 
-
         JPanel middlePanel = new JPanel();
-
         middlePanel.setLayout(new BorderLayout());
-
-
         String[] columnsNames = adminLogic.getColumnNames();
         data = adminLogic.getTableData();
         TableModel tableModel = new DefaultTableModel(data, columnsNames);
 
-        jTable = new JTable(){
+        jTable = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column == columnsNames.length - 1;
@@ -239,27 +216,32 @@ public class AdminUIMain {
                 int row = jTable.rowAtPoint(mouseEvent.getPoint());
                 int col = jTable.columnAtPoint(mouseEvent.getPoint());
 
-                if(col == columnsNames.length - 1){
+                if (col == columnsNames.length - 1) {
 
-                        jTable.setModel(new DefaultTableModel(data , columnsNames));
+                    jTable.setModel(new DefaultTableModel(data, columnsNames));
 
-
-                        InitializeEditOrDeleteUserFrame(data[row][0].toString() , data[row][1].toString() , data[row][2].toString() , data[row][3].toString() , data[row][4].toString() , data[row][5].toString() , data[row][6].toString());
-
-//                        jTable.setModel(new DefaultTableModel(data,columnsNames));
+                    InitializeEditOrDeleteUserFrame(data[row][0].toString(), data[row][1].toString(), data[row][2].toString(), data[row][3].toString(), data[row][4].toString(), data[row][5].toString(), data[row][6].toString());
 
 
                 }
 
             }
+
             @Override
-            public void mousePressed(MouseEvent mouseEvent) { }
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
             @Override
-            public void mouseReleased(MouseEvent mouseEvent) { }
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
             @Override
-            public void mouseEntered(MouseEvent mouseEvent) { }
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
             @Override
-            public void mouseExited(MouseEvent mouseEvent) { }
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
         });
 
         jTable.getTableHeader().setReorderingAllowed(false);
@@ -270,14 +252,14 @@ public class AdminUIMain {
         middlePanel.add(jScrollPane);
 
 
-        JPanel topPanel = new JPanel(new GridLayout(1,2,0,0));
+        JPanel topPanel = new JPanel(new GridLayout(1, 2, 0, 0));
         JPanel topEditPanel = new JPanel();
 
         JButton searchUserButton = new JButton("Search");
         JButton addUserButton = new JButton("Add");
         JButton exitEditButton = new JButton("Exit");
         JButton backEditButton = new JButton("Back");
-        topEditPanel.setLayout(new GridLayout(1,4,0,0));
+        topEditPanel.setLayout(new GridLayout(1, 4, 0, 0));
         topEditPanel.add(searchUserButton);
         topEditPanel.add(addUserButton);
         topEditPanel.add(backEditButton);
@@ -287,14 +269,14 @@ public class AdminUIMain {
 
         topPanel.add(searchArea);
         topPanel.add(topEditPanel);
-        topPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY , 3 , true));
+        topPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 3, true));
 
 
         searchUserButton.addActionListener(actionEvent -> {
 
             new Thread(() -> {
                 data = adminLogic.getFilteredUsers(searchArea.getText());
-                jTable.setModel(new DefaultTableModel(data,columnsNames));
+                jTable.setModel(new DefaultTableModel(data, columnsNames));
             }).start();
 
         });
@@ -311,7 +293,6 @@ public class AdminUIMain {
         });
 
 
-
         middlePanel.add(topPanel, BorderLayout.NORTH);
 
         editFrame.add(middlePanel, BorderLayout.CENTER);
@@ -322,19 +303,15 @@ public class AdminUIMain {
 
     }
 
-
-    private void InitializeAddUserFrame(){
+    private void InitializeAddUserFrame() {
 
         JFrame popupFrame = new JFrame();
         popupFrame.setLayout(new BorderLayout());
-        popupFrame.setSize(screenSize.width / 3,screenSize.height / 3);
+        popupFrame.setSize(screenSize.width / 3, screenSize.height / 3);
         popupFrame.setResizable(false);
-//        popupFrame.setMaximumSize(new Dimension(screenSize.width / 3,screenSize.height / 3));
-//        popupFrame.setMinimumSize(new Dimension(screenSize.width / 3,screenSize.height / 3));
-//        popupFrame.setLocationRelativeTo(addUser);
 
         JPanel popupPanel = new JPanel();
-        popupPanel.setLayout(new GridLayout(6,2,10,10));
+        popupPanel.setLayout(new GridLayout(6, 2, 10, 10));
 
 
         JLabel firstNameLabel = new JLabel("First Name ");
@@ -349,32 +326,33 @@ public class AdminUIMain {
         popupPanel.add(lastNameTextArea);
 
 
-
         JLabel typeLabel = new JLabel("Type ");
-        String[] type = {"student" , "conseiller"};
+        String[] type = {"student", "conseiller"};
         JComboBox typeComboBox = new JComboBox(type);
         popupPanel.add(typeLabel);
         popupPanel.add(typeComboBox);
 
 
         JLabel facultyLabel = new JLabel("Faculty ");
-        String[] faculties = adminLogic.getFaculties("None");
+        String[] faculties = adminLogic.getFaculties();
         JComboBox facComboBox = new JComboBox(faculties);
+        facComboBox.setSelectedItem("None");
         popupPanel.add(facultyLabel);
         popupPanel.add(facComboBox);
 
 
-
         JLabel exUniLabel = new JLabel("Old University ");
-        String[] unies = adminLogic.getUniversities("None");
+        String[] unies = adminLogic.getUniversities();
         JComboBox uniesComboBox = new JComboBox(unies);
+        uniesComboBox.setSelectedItem("None");
         popupPanel.add(exUniLabel);
         popupPanel.add(uniesComboBox);
 
 
         JLabel exSchoolLabel = new JLabel("Old School ");
-        String[] schools = adminLogic.getSchools("None");
+        String[] schools = adminLogic.getSchools();
         JComboBox schoolsComboBox = new JComboBox(schools);
+        schoolsComboBox.setSelectedItem("None");
         popupPanel.add(exSchoolLabel);
         popupPanel.add(schoolsComboBox);
 
@@ -390,17 +368,16 @@ public class AdminUIMain {
 
         popupFrame.add(popupPanel);
         popupFrame.add(popupLowerPanel, BorderLayout.SOUTH);
-//        popupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         popupFrame.setVisible(true);
 
 
         final String[] typeChosen = {"student"};
         typeComboBox.addItemListener(itemEvent -> {
-            if(itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")){
+            if (itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")) {
                 typeChosen[0] = "student";
                 uniesComboBox.setEnabled(true);
                 schoolsComboBox.setEnabled(true);
-            }else{
+            } else {
                 typeChosen[0] = "conseiller";
                 uniesComboBox.setEnabled(false);
                 schoolsComboBox.setEnabled(false);
@@ -424,22 +401,22 @@ public class AdminUIMain {
 
 
         submitButton.addActionListener(actionEvent -> {
-            if(!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
+            if (!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
 
-            String isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
-                    facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
-            if (!isAdded.equals("-1")) {
+                String isAdded = adminLogic.AddUser(firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
+                        facChosen[0], oldUniChosen[0], oldSchoolChosen[0]);
+                if (!isAdded.equals("-1")) {
 
-                new Thread(() -> {
-                    data = adminLogic.getTableData();
-                    jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
-                    popupFrame.setVisible(false);
-                }).start();
+                    new Thread(() -> {
+                        data = adminLogic.getTableData();
+                        jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
+                        popupFrame.setVisible(false);
+                    }).start();
 
-            } else {
-                popupFrame.setForeground(Color.RED);
+                } else {
+                    popupFrame.setForeground(Color.RED);
 
-            }
+                }
             }
         });
 
@@ -447,19 +424,17 @@ public class AdminUIMain {
 
     }
 
-    private void InitializeEditOrDeleteUserFrame(String uniId , String fn , String ln , String usertype , String fac , String olduni , String oldschool){
+    private void InitializeEditOrDeleteUserFrame(String uniId, String fn, String ln, String usertype, String fac, String olduni, String oldschool) {
+
         editFrame.setVisible(false);
         JFrame popupFrame = new JFrame();
         popupFrame.setLayout(new BorderLayout());
-        popupFrame.setSize(screenSize.width / 3,screenSize.height / 3);
+        popupFrame.setSize(screenSize.width / 3, screenSize.height / 3);
         popupFrame.setResizable(false);
         popupFrame.setVisible(true);
-//        popupFrame.setMaximumSize(new Dimension(screenSize.width / 3,screenSize.height / 3));
-//        popupFrame.setMinimumSize(new Dimension(screenSize.width / 3,screenSize.height / 3));
-//        popupFrame.setLocationRelativeTo(addUser);
 
         JPanel popupPanel = new JPanel();
-        popupPanel.setLayout(new GridLayout(7,2,10,10));
+        popupPanel.setLayout(new GridLayout(7, 2, 10, 10));
 
 
         JLabel uniIDLabel = new JLabel("Uni id ");
@@ -480,41 +455,33 @@ public class AdminUIMain {
         popupPanel.add(lastNameTextArea);
 
 
-
         JLabel typeLabel = new JLabel("Type ");
-        String[] type = { usertype ,"student" , "conseiller"};
+        String[] type = {usertype, "student", "conseiller"};
         JComboBox userTypeComboBox = new JComboBox(type);
         popupPanel.add(typeLabel);
         popupPanel.add(userTypeComboBox);
 
 
         JLabel facultyLabel = new JLabel("Faculty ");
-//        JTextField facultyTextField = new JTextField(fac);
-//        popupPanel.add(facultyLabel);
-//        popupPanel.add(facultyTextField);
-        String[] faculties = adminLogic.getFaculties(fac);
+        String[] faculties = adminLogic.getFaculties();
         JComboBox facComboBox = new JComboBox(faculties);
+        facComboBox.setSelectedItem(fac);
         popupPanel.add(facultyLabel);
         popupPanel.add(facComboBox);
 
 
-
         JLabel exUniLabel = new JLabel("Old University ");
-//        JTextField exUniTextArea = new JTextField(olduni);
-//        popupPanel.add(exUniLabel);
-//        popupPanel.add(exUniTextArea);
-        String[] unies = adminLogic.getUniversities(olduni);
+        String[] unies = adminLogic.getUniversities();
         JComboBox uniesComboBox = new JComboBox(unies);
+        uniesComboBox.setSelectedItem(olduni);
         popupPanel.add(exUniLabel);
         popupPanel.add(uniesComboBox);
 
 
         JLabel exSchoolLabel = new JLabel("Old School ");
-//        JTextField exSchoolTextArea = new JTextField(oldschool);
-//        popupPanel.add(exSchoolLabel);
-//        popupPanel.add(exSchoolTextArea);
-        String[] schools = adminLogic.getSchools(oldschool);
+        String[] schools = adminLogic.getSchools();
         JComboBox schoolsComboBox = new JComboBox(schools);
+        schoolsComboBox.setSelectedItem(oldschool);
         popupPanel.add(exSchoolLabel);
         popupPanel.add(schoolsComboBox);
 
@@ -536,26 +503,24 @@ public class AdminUIMain {
 
 
         popupFrame.add(popupPanel);
-        popupFrame.add(popupLowerPanel , BorderLayout.SOUTH);
-//        popupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        popupFrame.add(popupLowerPanel, BorderLayout.SOUTH);
         popupFrame.setVisible(true);
 
 
         final String[] typeChosen = {usertype};
-//        System.out.println(usertype);
 
-        if(!typeChosen[0].equals("student")){
+        if (!typeChosen[0].equals("student")) {
             schoolsComboBox.setEnabled(false);
             uniesComboBox.setEnabled(false);
         }
 
         userTypeComboBox.addItemListener(itemEvent -> {
 
-            if(!itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")){
+            if (!itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")) {
                 typeChosen[0] = "conseiller";
                 schoolsComboBox.setEnabled(false);
                 uniesComboBox.setEnabled(false);
-            }else{
+            } else {
                 typeChosen[0] = "student";
                 uniesComboBox.setEnabled(true);
                 schoolsComboBox.setEnabled(true);
@@ -580,10 +545,10 @@ public class AdminUIMain {
 
         editButton.addActionListener(actionEvent -> {
 
-            Boolean ed = adminLogic.EditUser(uniIDTextField.getText(),firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
-                    facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
+            Boolean ed = adminLogic.EditUser(uniIDTextField.getText(), firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
+                    facChosen[0], oldUniChosen[0], oldSchoolChosen[0]);
 
-            if (ed){
+            if (ed) {
 
                 new Thread(() -> {
                     data = adminLogic.getTableData();
@@ -601,7 +566,7 @@ public class AdminUIMain {
         deleteButton.addActionListener(actionEvent -> {
             Boolean del = adminLogic.DeleteUser(uniIDTextField.getText());
 
-            if (del){
+            if (del) {
 
                 new Thread(() -> {
                     data = adminLogic.getTableData();
@@ -631,9 +596,7 @@ public class AdminUIMain {
 
     }
 
-
-    private String adminName = "";
-    public void run(String adminName){
+    public void run(String adminName) {
         this.adminName = adminName;
         initializeFrame();
         InitializeDashboardPanel();
@@ -643,7 +606,6 @@ public class AdminUIMain {
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setVisible(true);
     }
-
 
 
 }
