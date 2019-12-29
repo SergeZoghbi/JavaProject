@@ -23,19 +23,15 @@ public class CirculaireRepository {
 
 
     public void AddCirculaire(String title, String faculty_name, String content) {
-
         DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
         String date = dateFormat.format(new Date());
-
         String id = new ObjectId().toString();
-
         DBObject circulaireToAdd = new BasicDBObject("_id",id)
                 .append("title", title)
                 .append("content", content)
                 .append("faculty_name", faculty_name)
                 .append("date", date);
 
-        System.out.println(circulaireToAdd);
         collection.insert(circulaireToAdd);
     }
 

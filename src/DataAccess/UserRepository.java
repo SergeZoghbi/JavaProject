@@ -1,7 +1,5 @@
 package DataAccess;
 
-import Models.User;
-
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,91 +41,121 @@ public class UserRepository {
     }
 
 
-    public int AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
+    public Integer AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) {
         String query = "{ ? = call addUser(?,?,?,?,?,?) }";
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, FIRST_NAME);
-        this.statement.setObject(3, LAST_NAME);
-        this.statement.setObject(4, id_fac);
-        this.statement.setObject(5, id_school);
-        this.statement.setObject(6, id_type);
-        this.statement.setObject(7, id_uni);
-        this.resultSet = this.statement.executeQuery();
-        this.resultSet.next();
-        return Integer.parseInt(this.resultSet.getString(1));
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
+            this.statement.setObject(2, FIRST_NAME);
+            this.statement.setObject(3, LAST_NAME);
+            this.statement.setObject(4, id_fac);
+            this.statement.setObject(5, id_school);
+            this.statement.setObject(6, id_type);
+            this.statement.setObject(7, id_uni);
+            this.resultSet = this.statement.executeQuery();
+            this.resultSet.next();
+            return Integer.parseInt(this.resultSet.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public int UpdateUser(String ID_UNI, String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
+    public Integer UpdateUser(String ID_UNI, String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni){
 
         String query = "{ ? = call updateUser(?,?,?,?,?,?,?) }";
 
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, ID_UNI);
-        this.statement.setObject(3, FIRST_NAME);
-        this.statement.setObject(4, LAST_NAME);
-        this.statement.setObject(5, id_fac);
-        this.statement.setObject(6, id_school);
-        this.statement.setObject(7, id_type);
-        this.statement.setObject(8, id_uni);
-        this.resultSet = this.statement.executeQuery();
-        this.resultSet.next();
-        return Integer.parseInt(this.resultSet.getString(1));
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
+            this.statement.setObject(2, ID_UNI);
+            this.statement.setObject(3, FIRST_NAME);
+            this.statement.setObject(4, LAST_NAME);
+            this.statement.setObject(5, id_fac);
+            this.statement.setObject(6, id_school);
+            this.statement.setObject(7, id_type);
+            this.statement.setObject(8, id_uni);
+            this.resultSet = this.statement.executeQuery();
+            this.resultSet.next();
+            return Integer.parseInt(this.resultSet.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    return null;
     }
 
 
-    public int ChangePassword(String UNI_ID, String Old_Pass, String New_Pass) throws SQLException {
+    public Integer ChangePassword(String UNI_ID, String Old_Pass, String New_Pass) {
 
         String query = "{ ? = call ChangePassword(?,?,?) }";
 
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, UNI_ID);
-        this.statement.setObject(3, Old_Pass);
-        this.statement.setObject(4, New_Pass);
-        this.resultSet = this.statement.executeQuery();
-        this.resultSet.next();
-        return Integer.parseInt(this.resultSet.getString(1));
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
+            this.statement.setObject(2, UNI_ID);
+            this.statement.setObject(3, Old_Pass);
+            this.statement.setObject(4, New_Pass);
+            this.resultSet = this.statement.executeQuery();
+            this.resultSet.next();
+            return Integer.parseInt(this.resultSet.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      return null;
     }
 
-    public int DeleteUser(String UNI_ID) throws SQLException {
+    public Integer DeleteUser(String UNI_ID) {
 
         String query = "{ ? = call deleteUser(?) }";
 
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, UNI_ID);
-        this.resultSet = this.statement.executeQuery();
-        this.resultSet.next();
-        return Integer.parseInt(this.resultSet.getString(1));
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
+            this.statement.setObject(2, UNI_ID);
+            this.resultSet = this.statement.executeQuery();
+            this.resultSet.next();
+            return Integer.parseInt(this.resultSet.getString(1));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
-    public int Login(String UNI_ID, String Password) throws SQLException {
-
+    public Integer Login(String UNI_ID, String Password){
         String query = "{ ? = call login(?,?) }";
 
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, UNI_ID);
-        this.statement.setObject(3, Password);
-        this.resultSet = this.statement.executeQuery();
-        this.resultSet.next();
-        return Integer.parseInt(this.resultSet.getString(1));
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
+            this.statement.setObject(2, UNI_ID);
+            this.statement.setObject(3, Password);
+            this.resultSet = this.statement.executeQuery();
+            this.resultSet.next();
+            return Integer.parseInt(this.resultSet.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       return null;
     }
 
 
-    public int ResetPassword(String UNI_ID) throws SQLException {
+    public Integer ResetPassword(String UNI_ID){
 
         String query = "{ ? = call resetPassword(?) }";
 
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
-        this.statement.setObject(2, UNI_ID);
-        this.resultSet = this.statement.executeQuery();
-        this.resultSet.next();
-        return Integer.parseInt(this.resultSet.getString(1));
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.registerOutParameter(1, Types.JAVA_OBJECT);
+            this.statement.setObject(2, UNI_ID);
+            this.resultSet = this.statement.executeQuery();
+            this.resultSet.next();
+            return Integer.parseInt(this.resultSet.getString(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+       return null;
     }
 
 }

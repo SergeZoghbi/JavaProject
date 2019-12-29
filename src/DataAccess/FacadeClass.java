@@ -1,15 +1,9 @@
 package DataAccess;
 
-import BusinessLayer.LoginFrameLogic;
-import Models.Circulaire;
-import Models.User;
 import com.mongodb.DBCursor;
 
-import javax.swing.*;
-import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
 public class FacadeClass {
 
@@ -41,12 +35,12 @@ public class FacadeClass {
     }
 
 
-    public void AddCirculaire(String title , String faculty_name , String content) {
+    public void AddCirculaire(String title, String faculty_name, String content) {
         this.circulaireRepository.AddCirculaire(title, faculty_name, content);
     }
 
-    public DBCursor getCirculairesByDate(String date,String Fac_name) {
-        return this.circulaireRepository.getCirculairesByDate(date,Fac_name);
+    public DBCursor getCirculairesByDate(String date, String Fac_name) {
+        return this.circulaireRepository.getCirculairesByDate(date, Fac_name);
     }
 
     public DBCursor getLastCirculaire(String facName) {
@@ -62,27 +56,27 @@ public class FacadeClass {
     }
 
 
-    public int AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
+    public Integer AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) {
         return this.userRepository.AddUser(FIRST_NAME, LAST_NAME, id_fac, id_school, id_type, id_uni);
     }
 
-    public int UpdateUser(String ID_UNI, String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) throws SQLException {
-        return this.userRepository.UpdateUser(ID_UNI,FIRST_NAME,LAST_NAME,id_fac,id_school,id_type,id_uni);
+    public Integer UpdateUser(String ID_UNI, String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) {
+        return this.userRepository.UpdateUser(ID_UNI, FIRST_NAME, LAST_NAME, id_fac, id_school, id_type, id_uni);
     }
 
-    public int ChangePassword(String UNI_ID, String Old_Pass, String New_Pass) throws SQLException {
+    public Integer ChangePassword(String UNI_ID, String Old_Pass, String New_Pass) {
         return this.userRepository.ChangePassword(UNI_ID, Old_Pass, New_Pass);
     }
 
-    public int DeleteUser(String UNI_ID) throws SQLException {
+    public Integer DeleteUser(String UNI_ID) {
         return this.userRepository.DeleteUser(UNI_ID);
     }
 
-    public int Login(String UNI_ID, String Password) throws SQLException {
+    public Integer Login(String UNI_ID, String Password) {
         return this.userRepository.Login(UNI_ID, Password);
     }
 
-    public int ResetPassword(String UNI_ID) throws SQLException {
+    public Integer ResetPassword(String UNI_ID) {
         return this.userRepository.ResetPassword(UNI_ID);
     }
 
@@ -90,15 +84,15 @@ public class FacadeClass {
         return this.dashboardDropDownDataRepository.CallGetProcedures(procedureName);
     }
 
-    public void LogSearch(String UNI_ID, String SearchWord) throws SQLException {
+    public void LogSearch(String UNI_ID, String SearchWord) {
         this.logsRepository.LogSearch(UNI_ID, SearchWord);
     }
 
-    public void LogCirculaireAdded(String UNI_ID) throws SQLException {
+    public void LogCirculaireAdded(String UNI_ID) {
         this.logsRepository.LogCirculaireAdded(UNI_ID);
     }
 
-    public void Log_auth(String UNI_ID) throws SQLException {
+    public void Log_auth(String UNI_ID) {
         this.logsRepository.Log_auth(UNI_ID);
     }
 }

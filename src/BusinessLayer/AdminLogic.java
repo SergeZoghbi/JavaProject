@@ -9,7 +9,6 @@ import Models.User;
 import com.google.gson.Gson;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -20,51 +19,35 @@ import java.sql.SQLException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
-
 
 public class AdminLogic {
 
     private FacadeClass facadeClass = FacadeClass.getInstance();
+    private ArrayList<Faculty> faculties = new ArrayList<>();
+    private ArrayList<School> schools = new ArrayList<>();
+    private ArrayList<University> universities = new ArrayList<>();
 
     public int AddUser(String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
 
-        try {
-            return facadeClass.AddUser(fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        return facadeClass.AddUser(fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
     }
 
     public boolean DeleteUser(String id) {
 
-        try {
-            return facadeClass.DeleteUser(id) == 1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        return facadeClass.DeleteUser(id) == 1;
 
-        return false;
     }
 
     public boolean EditUser(String id, String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
-        try {
-            int resultat = facadeClass.UpdateUser(id, fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
-            return resultat == 1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+
+        int resultat = facadeClass.UpdateUser(id, fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
+        return resultat == 1;
+
     }
 
     private int mapTypeToInt(String type) {
         return type.equals("student") ? 2 : 3;
     }
-
-
-    private ArrayList<Faculty> faculties = new ArrayList<>();
 
     private int mapFacNameToId(String facName) {
         for (Faculty fac : faculties) {
@@ -103,8 +86,6 @@ public class AdminLogic {
         return null;
     }
 
-    private ArrayList<School> schools = new ArrayList<>();
-
     private int mapSchoolNameToId(String schoolName) {
         for (School school : schools) {
             if (school.SCHOOL_NAME.equals(schoolName)) {
@@ -141,8 +122,6 @@ public class AdminLogic {
 
         return null;
     }
-
-    private ArrayList<University> universities = new ArrayList<>();
 
     private int mapUniNameToId(String uniName) {
         for (University uni : universities) {
@@ -312,20 +291,12 @@ public class AdminLogic {
 
 
     public void ResetPassword(String uniID) {
-        try {
-            facadeClass.ResetPassword(uniID);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        facadeClass.ResetPassword(uniID);
     }
 
 
     public void Logout(String id) {
-        try {
-            facadeClass.Log_auth(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        facadeClass.Log_auth(id);
     }
 
 

@@ -4,16 +4,13 @@ import BusinessLayer.UserLogic;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static java.lang.Thread.sleep;
 
@@ -21,45 +18,38 @@ import static java.lang.Thread.sleep;
 public class UserUIMain {
 
     private UserLogic userLogic;
+    private JFrame jFrame;
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private JTable jTable;
+    private String[] columnsNames = null;
+    private Object[][] data = null;
+    private String uid = "";
+    private String fac_name = "";
 
-    public UserUIMain(){
+
+    public UserUIMain() {
         userLogic = new UserLogic();
     }
 
-
-    private JFrame jFrame;
-
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-
-    private JTable jTable;
-
-    private String[] columnsNames = null;
-    private Object[][] data = null;
-
-
-    public void setTableDataAndColumns(){
+    public void setTableDataAndColumns() {
         this.columnsNames = userLogic.getColumnsName();
-        this.data = userLogic.getTableData(uid);
+        this.data = userLogic.getTableData(this.fac_name);
     }
 
-
-
-    private void InitializeJFrame(){
+    private void InitializeJFrame() {
         jFrame = new JFrame();
-        jFrame.setSize(screenSize.width / 2 , (int) (screenSize.height / 1.5));
+        jFrame.setSize(screenSize.width / 2, (int) (screenSize.height / 1.5));
         jFrame.setLayout(new BorderLayout());
         jFrame.setResizable(false);
     }
 
-
-    private void InitializeTopPanel(String uni_id , int priority) {
+    private void InitializeTopPanel(String uni_id, int priority) {
 
         JPanel topPanel = new JPanel();
         topPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 
         JButton nameLabel = new JButton("Logged in as " + uni_id + "   ");
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,screenSize.width/10));
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, screenSize.width / 10));
         nameLabel.setBorderPainted(false);
         nameLabel.setFocusPainted(false);
         nameLabel.setContentAreaFilled(false);
@@ -68,12 +58,12 @@ public class UserUIMain {
 
             JFrame infoFrame = new JFrame();
             infoFrame.setLayout(new BorderLayout());
-            infoFrame.setSize(screenSize.width / 6 , screenSize.height / 6);
+            infoFrame.setSize(screenSize.width / 6, screenSize.height / 6);
             infoFrame.setLocation(nameLabel.getLocation());
 
 
             JPanel centralPanel = new JPanel();
-            centralPanel.setLayout(new GridLayout(4,2));
+            centralPanel.setLayout(new GridLayout(4, 2));
 
 
             centralPanel.add(new JLabel("Old Password"));
@@ -85,27 +75,27 @@ public class UserUIMain {
             centralPanel.add(newPasswordField);
 
 
-            centralPanel.add( new JLabel("New Password(x2)"));
+            centralPanel.add(new JLabel("New Password(x2)"));
             JPasswordField newPasswordField2 = new JPasswordField();
             centralPanel.add(newPasswordField2);
 
 
-
-            centralPanel.add(new Component() {});
+            centralPanel.add(new Component() {
+            });
 
             JPanel acceptPanel = new JPanel();
-            acceptPanel.setLayout(new GridLayout(1,2,0,0));
+            acceptPanel.setLayout(new GridLayout(1, 2, 0, 0));
 
             JButton changeButton = new JButton("Reset");
-            changeButton.setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
+            changeButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
             changeButton.addActionListener(actionEvent12 -> {
 
-                if(userLogic.CharArrayToString(newPasswordField.getPassword()).equals(userLogic.CharArrayToString(newPasswordField2.getPassword())) && newPasswordField.getPassword().length != 0){
-                    userLogic.resetPassword(uni_id , oldPasswordField.getPassword() , newPasswordField.getPassword());
+                if (userLogic.CharArrayToString(newPasswordField.getPassword()).equals(userLogic.CharArrayToString(newPasswordField2.getPassword())) && newPasswordField.getPassword().length != 0) {
+                    userLogic.resetPassword(uni_id, oldPasswordField.getPassword(), newPasswordField.getPassword());
                     infoFrame.setVisible(false);
-                }else{
+                } else {
                     new Thread(() -> {
-                       newPasswordField2.setForeground(Color.RED);
+                        newPasswordField2.setForeground(Color.RED);
                         try {
                             sleep(1000);
                         } catch (InterruptedException e) {
@@ -119,7 +109,7 @@ public class UserUIMain {
             });
 
             JButton cancelButton = new JButton("Cancel");
-            cancelButton.setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
+            cancelButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
             cancelButton.addActionListener(actionEvent1 -> infoFrame.setVisible(false));
 
 
@@ -127,10 +117,9 @@ public class UserUIMain {
             acceptPanel.add(cancelButton);
             centralPanel.add(acceptPanel);
 
-            infoFrame.add(centralPanel , BorderLayout.CENTER);
+            infoFrame.add(centralPanel, BorderLayout.CENTER);
             infoFrame.setVisible(true);
         });
-
 
 
         JButton logoutButton = new JButton("Logout");
@@ -141,7 +130,7 @@ public class UserUIMain {
 
 
         JPanel searchPanel = new JPanel();
-        searchPanel.setLayout(new GridLayout(1,1,0,0));
+        searchPanel.setLayout(new GridLayout(1, 1, 0, 0));
 
 
         JDateChooser filterButton = new JDateChooser();
@@ -149,18 +138,14 @@ public class UserUIMain {
         filterButton.addPropertyChangeListener(propertyChangeEvent -> {
 
             entered[0]++;
-            if(entered[0] > 2){
+            if (entered[0] > 2) {
 
                 DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
-                System.out.println(propertyChangeEvent.getNewValue());
                 String date = dateFormat.format(propertyChangeEvent.getNewValue());
-                System.out.println(date);
-
 
                 new Thread(() -> {
 
-                    data = userLogic.filterData(uni_id,date);
-
+                    data = userLogic.filterData(uni_id, date, this.fac_name);
 
 //                        jTable.revalidate();
 //                        jTable.repaint();
@@ -175,10 +160,13 @@ public class UserUIMain {
         });
 
 
-        if(priority == 3){
-            nameLabel.setBorder(BorderFactory.createEmptyBorder(0,0,0,screenSize.width/12));
+        if (priority == 3) {
+            nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, screenSize.width / 12));
+
             JButton addCirculaire = new JButton("Add Circulaire");
+
             searchPanel.add(addCirculaire);
+
             addCirculaire.addActionListener(actionEvent -> addCirculaireFrame());
         }
 
@@ -201,68 +189,52 @@ public class UserUIMain {
         });
 
 
-        jFrame.add(topPanel,BorderLayout.NORTH);
+        jFrame.add(topPanel, BorderLayout.NORTH);
 
     }
 
-
-    private void addCirculaireFrame(){
+    private void addCirculaireFrame() {
         JFrame circFrame = new JFrame();
         circFrame.setLayout(new BorderLayout());
         circFrame.setLocationRelativeTo(jTable);
-        circFrame.setSize(screenSize.width / 3 , screenSize.height / 3);
+        circFrame.setSize(screenSize.width / 3, screenSize.height / 3);
         circFrame.setResizable(false);
 
         JPanel topCircPanel = new JPanel();
-        topCircPanel.setLayout(new GridLayout(2,1,0,0));
+        topCircPanel.setLayout(new GridLayout(2, 1, 0, 0));
 
         JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new GridLayout(1,2,0,0));
+        titlePanel.setLayout(new GridLayout(1, 2, 0, 0));
         titlePanel.add(new JLabel("Title : "));
         JTextField titleField = new JTextField();
         titlePanel.add(titleField);
-        titlePanel.setBackground(new Color(255,255,255));
+        titlePanel.setBackground(new Color(255, 255, 255));
 
 
         JPanel facPanel = new JPanel();
-        facPanel.setLayout(new GridLayout(1,2,0,0));
+        facPanel.setLayout(new GridLayout(1, 2, 0, 0));
         facPanel.add(new JLabel("Faculty : "));
-        JTextField facField = new JTextField(userLogic.getFacName(uid));
+        JTextField facField = new JTextField(this.fac_name);
         facField.setEnabled(false);
         facPanel.add(facField);
-        facPanel.setBackground(new Color(255,255,255));
+        facPanel.setBackground(new Color(255, 255, 255));
 
 
         JPanel contenuPanel = new JPanel();
         contenuPanel.setLayout(new BorderLayout());
         JTextArea contenuCirculaireTextArea = new JTextArea();
-        contenuPanel.add(contenuCirculaireTextArea , BorderLayout.CENTER);
-        contenuPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY , 1 , true));
+        contenuPanel.add(contenuCirculaireTextArea, BorderLayout.CENTER);
+        contenuPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
         JButton addCirculaireButton = new JButton("Add");
-        contenuPanel.add(addCirculaireButton , BorderLayout.SOUTH);
+        contenuPanel.add(addCirculaireButton, BorderLayout.SOUTH);
 
         addCirculaireButton.addActionListener(actionEvent -> {
 
             new Thread(() -> {
-                userLogic.AddNewCirculaire(uid , titleField.getText() , userLogic.getFacName(uid), contenuCirculaireTextArea.getText());
-                data = userLogic.getTableData(uid);
-                jTable.setModel(new DefaultTableModel(data , columnsNames));
-//                Object[][] temp = new Object[data.length+1][];
-//
-//                int j = 0;
-//                for(int i = 0 ; i < data.length ; i ++){
-//                    temp[j] = data[i];
-//                    j++;
-//                }
-//                temp[j] =
-//
-//                data = temp;
-//                data = new Object[][] {
-//                        data,
-//                        userLogic.AddNewCirculaire(titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText())
-//                };
-//                data[data.length - 1] = userLogic.AddNewCirculaire(titleField.getText() , facField.getText() , contenuCirculaireTextArea.getText());
-//                data = userLogic.filterData("");
+
+                userLogic.AddNewCirculaire(uid, titleField.getText(), this.fac_name, contenuCirculaireTextArea.getText());
+                data = userLogic.getTableData(this.fac_name);
+                jTable.setModel(new DefaultTableModel(data, columnsNames));
 
             }).start();
 
@@ -273,39 +245,34 @@ public class UserUIMain {
 
         topCircPanel.add(titlePanel);
         topCircPanel.add(facPanel);
-        circFrame.add(topCircPanel , BorderLayout.NORTH);
-        circFrame.add(contenuPanel , BorderLayout.CENTER);
+        circFrame.add(topCircPanel, BorderLayout.NORTH);
+        circFrame.add(contenuPanel, BorderLayout.CENTER);
 
         circFrame.setVisible(true);
 
     }
 
-
-
-
-
-    private void InitializeCirculaireTablePanel(){
+    private void InitializeCirculaireTablePanel() {
         JPanel circulaireTablePanel = new JPanel();
 
         circulaireTablePanel.setLayout(new BorderLayout());
 
 
-
         TableModel tableModel = new DefaultTableModel(data, columnsNames);
 
-        jTable = new JTable(){
+        jTable = new JTable() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                    return column == columnsNames.length - 1;
-                }
+                return column == columnsNames.length - 1;
+            }
 
-                @Override
-                public Class<?> getColumnClass(int column) {
-                    if (column == columnsNames.length - 1) {
-                        return Boolean.class;
-                    }
-                    return String.class;
+            @Override
+            public Class<?> getColumnClass(int column) {
+                if (column == columnsNames.length - 1) {
+                    return Boolean.class;
                 }
+                return String.class;
+            }
 
         };
 
@@ -314,7 +281,7 @@ public class UserUIMain {
 
         jTable.setModel(tableModel);
 
-           // to make cells not editable
+        // to make cells not editable
 //           jTable.setDefaultEditor(Object.class , null);
 
 
@@ -325,83 +292,90 @@ public class UserUIMain {
                 int row = jTable.rowAtPoint(mouseEvent.getPoint());
                 int col = jTable.columnAtPoint(mouseEvent.getPoint());
 
-                if(col == columnsNames.length - 1) {
+                if (col == columnsNames.length - 1) {
 //                         jFrame.setVisible(false);
 
 
-                         JFrame popupFrame = new JFrame();
-                         popupFrame.setLayout(new BorderLayout());
-                         popupFrame.setResizable(false);
+                    JFrame popupFrame = new JFrame();
+                    popupFrame.setLayout(new BorderLayout());
+                    popupFrame.setResizable(false);
 
-                         popupFrame.setLocationRelativeTo(jTable);
+                    popupFrame.setLocationRelativeTo(jTable);
 
-                         JPanel topPanel = new JPanel(new GridLayout(2,1,0,0));
-                         JLabel titreLabel = new JLabel("Title : " +data[row][0].toString());
-                         titreLabel.setFont(new Font("SansSerif" , Font.ITALIC, 20));
-                         JLabel facultyLabel = new JLabel("Date : " + data[row][1].toString());
-                         facultyLabel.setFont(new Font("SansSerif" , Font.ITALIC, 14));
-
-
-
-                         topPanel.add(titreLabel);
-                         topPanel.add(facultyLabel);
-
-                         topPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    JPanel topPanel = new JPanel(new GridLayout(2, 1, 0, 0));
+                    JLabel titreLabel = new JLabel("Title : " + data[row][0].toString());
+                    titreLabel.setFont(new Font("SansSerif", Font.ITALIC, 20));
+                    JLabel facultyLabel = new JLabel("Date : " + data[row][1].toString());
+                    facultyLabel.setFont(new Font("SansSerif", Font.ITALIC, 14));
 
 
-                         JPanel midPanel = new JPanel(new BorderLayout());
-                         JTextArea jTextArea = new JTextArea();
-                         String[] str = data[row][2].toString().split("");
+                    topPanel.add(titreLabel);
+                    topPanel.add(facultyLabel);
 
-                          for(int i = 0 ; i < str.length ; i++){
-                              if(i % 120 == 0){
-                                  jTextArea.append("\n");
-                              }
-                              jTextArea.append(str[i]);
-                          }
-
-                         jTextArea.setEditable(false);
-                         midPanel.add(jTextArea , BorderLayout.NORTH);
+                    topPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 
-                         JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                         JButton exitButton = new JButton("Close");
-                         exitButton.addActionListener(actionEvent -> {
-                             popupFrame.setVisible(false);
-                             DefaultTableModel mod = new DefaultTableModel(data,columnsNames);
-                             jTable.setModel(mod);
+                    JPanel midPanel = new JPanel(new BorderLayout());
+                    JTextArea jTextArea = new JTextArea();
+                    String[] str = data[row][2].toString().split("");
+
+                    for (int i = 0; i < str.length; i++) {
+                        if (i % 120 == 0) {
+                            jTextArea.append("\n");
+                        }
+                        jTextArea.append(str[i]);
+                    }
+
+                    jTextArea.setEditable(false);
+                    midPanel.add(jTextArea, BorderLayout.NORTH);
+
+
+                    JPanel lowerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                    JButton exitButton = new JButton("Close");
+                    exitButton.addActionListener(actionEvent -> {
+                        popupFrame.setVisible(false);
+                        DefaultTableModel mod = new DefaultTableModel(data, columnsNames);
+                        jTable.setModel(mod);
 //                             jFrame.setVisible(true);
-                         });
-                         lowerPanel.add(exitButton);
+                    });
+                    lowerPanel.add(exitButton);
 
 
-                         popupFrame.add(topPanel , BorderLayout.NORTH);
-                         topPanel.setBackground(new Color(255,255,255));
-                         popupFrame.add(midPanel , BorderLayout.CENTER);
-                         midPanel.setBackground(new Color(255,255,255));
-                         popupFrame.add(lowerPanel , BorderLayout.SOUTH);
-                         lowerPanel.setBackground(new Color(255,255,255));
+                    popupFrame.add(topPanel, BorderLayout.NORTH);
+                    topPanel.setBackground(new Color(255, 255, 255));
+                    popupFrame.add(midPanel, BorderLayout.CENTER);
+                    midPanel.setBackground(new Color(255, 255, 255));
+                    popupFrame.add(lowerPanel, BorderLayout.SOUTH);
+                    lowerPanel.setBackground(new Color(255, 255, 255));
 
-                         popupFrame.setSize(screenSize.width / 2 , (int) (screenSize.height / 1.5));
+                    popupFrame.setSize(screenSize.width / 2, (int) (screenSize.height / 1.5));
 
 //                         popupFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                         popupFrame.setVisible(true);
+                    popupFrame.setVisible(true);
 
 
-                    jTable.setModel(new DefaultTableModel(data,columnsNames));
+                    jTable.setModel(new DefaultTableModel(data, columnsNames));
 
                 }
 
             }
-                 @Override
-                 public void mousePressed(MouseEvent mouseEvent) { }
-                 @Override
-                 public void mouseReleased(MouseEvent mouseEvent) { }
-                 @Override
-                 public void mouseEntered(MouseEvent mouseEvent) { }
-                 @Override
-                 public void mouseExited(MouseEvent mouseEvent) { }
-             });
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+            }
+        });
 
 
         JScrollPane jScrollPane = new JScrollPane(jTable);
@@ -411,12 +385,12 @@ public class UserUIMain {
         jFrame.add(circulaireTablePanel, BorderLayout.CENTER);
     }
 
-    private String uid = "";
-    public void run(String uni_id , int priority){
+    public void run(String uni_id, int priority) {
         this.uid = uni_id;
+        this.fac_name = userLogic.getFacName(this.uid);
         setTableDataAndColumns();
         InitializeJFrame();
-        InitializeTopPanel(uni_id , priority);
+        InitializeTopPanel(this.uid, priority);
         InitializeCirculaireTablePanel();
 
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -13,30 +13,40 @@ public class LogsRepository {
     }
 
 
-    public void LogSearch(String UNI_ID, String SearchWord) throws SQLException {
+    public void LogSearch(String UNI_ID, String SearchWord)  {
         String query = "{ call logSearch(?,?) }";
+        try {
+            statement = mySQLConnection.connection.prepareCall(query);
+            statement.setObject(1, UNI_ID);
+            statement.setObject(2, SearchWord);
+            statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        statement = mySQLConnection.connection.prepareCall(query);
-        statement.setObject(1, UNI_ID);
-        statement.setObject(2, SearchWord);
-        statement.executeQuery();
     }
 
-    public void LogCirculaireAdded(String UNI_ID) throws SQLException {
+    public void LogCirculaireAdded(String UNI_ID) {
         String query = "{ call log_add_circulaire(?) }";
-
-        statement = mySQLConnection.connection.prepareCall(query);
-        statement.setObject(1, UNI_ID);
-        statement.executeQuery();
+        try {
+            statement = mySQLConnection.connection.prepareCall(query);
+            statement.setObject(1, UNI_ID);
+            statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void Log_auth(String UNI_ID) throws SQLException {
+    public void Log_auth(String UNI_ID)  {
         String query = "{ call log_auth(?,?,?) }";
-
-        statement = mySQLConnection.connection.prepareCall(query);
-        statement.setObject(1, "logout");
-        statement.setObject(2, 1);
-        statement.setObject(3, UNI_ID);
-        statement.executeQuery();
+        try {
+            statement = mySQLConnection.connection.prepareCall(query);
+            statement.setObject(1, "logout");
+            statement.setObject(2, 1);
+            statement.setObject(3, UNI_ID);
+            statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

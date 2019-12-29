@@ -61,5 +61,11 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="gson-2.6.2" level="project" />
+    <orderEntry type="library" name="jcalendar-1.4" level="project" />
+    <orderEntry type="library" name="jfreechart-1.5.0" level="project" />
+    <orderEntry type="library" name="json-20190722" level="project" />
+    <orderEntry type="library" name="mongo-java-driver-3.4.0" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-5.1.48" level="project" />
   </component>
 </module>

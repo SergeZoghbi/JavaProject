@@ -1,6 +1,5 @@
 package BusinessLayer;
 
-import Common.CharToString;
 import Common.MD5;
 import DataAccess.FacadeClass;
 
@@ -9,23 +8,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 
 public class LoginFrameLogic {
 
     public int CheckAuthentication(String user_id, char[] password) {
         String passwd = CharArrayToString(password);
-        try {
-            FacadeClass facadeClass = FacadeClass.getInstance();
-           return facadeClass.Login(user_id, MD5.getMd5(passwd));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        FacadeClass facadeClass = FacadeClass.getInstance();
+        return facadeClass.Login(user_id, MD5.getMd5(passwd));
+
     }
-    public  String CharArrayToString(char[] arr){
+
+    public String CharArrayToString(char[] arr) {
         String str = "";
-        for (int i = 0 ; i < arr.length ; i++) {
+        for (int i = 0; i < arr.length; i++) {
             str += arr[i];
         }
         return str;
