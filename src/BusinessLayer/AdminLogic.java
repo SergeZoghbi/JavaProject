@@ -13,7 +13,6 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.json.JSONArray;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormatSymbols;
@@ -30,9 +29,10 @@ public class AdminLogic {
 
     public String AddUser(String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
 
-        User userAdded = new User();
+
         String IdUni = facadeClass.AddUser(fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
         if (!IdUni.equals("-1")) {
+            User userAdded = new User();
             userAdded.ID_UNI = IdUni;
             userAdded.FIRST_NAME = fn;
             userAdded.LAST_NAME = ln;
@@ -57,8 +57,6 @@ public class AdminLogic {
         if (resultat == 1) {
             int index = 0;
             for (User user : userStore) {
-                System.out.println(user.ID_UNI);
-                System.out.println(user.ID_UNI.equals(id));
                 if (user.ID_UNI.equals(id)) {
                     User userEdited = new User();
                     userEdited.ID_UNI = user.ID_UNI;
@@ -68,7 +66,7 @@ public class AdminLogic {
                     userEdited.FIRST_NAME = fn;
                     userEdited.LAST_NAME = ln;
                     userEdited.FACULTY_NAME = fac;
-                    userStore.set(index,userEdited);
+                    userStore.set(index, userEdited);
                     return true;
                 }
                 index++;
@@ -76,6 +74,7 @@ public class AdminLogic {
         }
         return false;
     }
+
     private int mapTypeToInt(String type) {
         return type.equals("student") ? 2 : 3;
     }
@@ -165,12 +164,8 @@ public class AdminLogic {
     }
 
     public Object[][] getFilteredUsers(String u_id) {
-        System.out.println("filter");
-        System.out.println(userStore);
         ResultSet rs = this.facadeClass.AccountInfo(u_id);
         userStore.clear();
-        System.out.println(userStore);
-
         JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
         Object[][] listOfUsers = new Object[jsonArray.length()][];
         int i = 0;
@@ -277,6 +272,7 @@ public class AdminLogic {
             for (Object json : jsonArray) {
                 User user = new Gson().fromJson(json.toString(), User.class);
                 listOfUsers[i] = user.returnObject();
+                userStore.add(user);
                 i++;
             }
             return listOfUsers;
