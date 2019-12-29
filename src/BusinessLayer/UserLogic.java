@@ -49,6 +49,7 @@ public class UserLogic {
             Circulaire circulaire = new Gson().fromJson(result.toString(), Circulaire.class);
             listofFac[i] = circulaire.returnObject();
             i++;
+
         }
         return listofFac;
     }
@@ -60,6 +61,7 @@ public class UserLogic {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         DBCursor results = facadeClass.getCirculairesByDate(date,getFacName(uid));
 
         Object[][] listofFac = new Object[results.length()][];

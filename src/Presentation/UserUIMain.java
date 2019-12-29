@@ -151,13 +151,16 @@ public class UserUIMain {
             entered[0]++;
             if(entered[0] > 2){
 
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
-                Date date = (Date) propertyChangeEvent.getNewValue();
+                DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+                System.out.println(propertyChangeEvent.getNewValue());
+                String date = dateFormat.format(propertyChangeEvent.getNewValue());
+                System.out.println(date);
 
 
                 new Thread(() -> {
 
-                    data = userLogic.filterData(uni_id,dateFormat.format(date));
+                    data = userLogic.filterData(uni_id,date);
+
 
 //                        jTable.revalidate();
 //                        jTable.repaint();
