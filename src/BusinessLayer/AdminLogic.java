@@ -47,8 +47,11 @@ public class AdminLogic {
 
     public boolean DeleteUser(String id) {
 
-        return facadeClass.DeleteUser(id) == 1;
-
+        if(facadeClass.DeleteUser(id) == 1){
+            userStore.removeIf(user -> user.ID_UNI.equals(id));
+            return true;
+        }
+        return false;
     }
 
     public boolean EditUser(String id, String fn, String ln, String type, String fac, String oldUni, String oldSchool) {
