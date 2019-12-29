@@ -16,11 +16,15 @@ public class UserRepository {
     }
 
 
-    public ResultSet AccountInfo(String UNI_ID) throws SQLException {
+    public ResultSet AccountInfo(String UNI_ID){
         String query = "{ call AccountInfo(?) }";
-        this.statement = this.mySQLConnection.connection.prepareCall(query);
-        this.statement.setObject(1, UNI_ID);
-        this.resultSet = this.statement.executeQuery();
+        try {
+            this.statement = this.mySQLConnection.connection.prepareCall(query);
+            this.statement.setObject(1, UNI_ID);
+            this.resultSet = this.statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return this.resultSet;
     }
 
@@ -41,7 +45,7 @@ public class UserRepository {
     }
 
 
-    public Integer AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) {
+    public String AddUser(String FIRST_NAME, String LAST_NAME, Integer id_fac, Integer id_school, Integer id_type, Integer id_uni) {
         String query = "{ ? = call addUser(?,?,?,?,?,?) }";
         try {
             this.statement = this.mySQLConnection.connection.prepareCall(query);
@@ -54,7 +58,7 @@ public class UserRepository {
             this.statement.setObject(7, id_uni);
             this.resultSet = this.statement.executeQuery();
             this.resultSet.next();
-            return Integer.parseInt(this.resultSet.getString(1));
+            return this.resultSet.getString(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }

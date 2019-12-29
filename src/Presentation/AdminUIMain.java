@@ -426,9 +426,9 @@ public class AdminUIMain {
         submitButton.addActionListener(actionEvent -> {
             if(!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
 
-            int isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
+            String isAdded =  adminLogic.AddUser(firstNameTextArea.getText(),lastNameTextArea.getText(),typeChosen[0],
                     facChosen[0], oldUniChosen[0],oldSchoolChosen[0]);
-            if (isAdded != -1) {
+            if (!isAdded.equals("-1")) {
 
                 new Thread(() -> {
                     data = adminLogic.getTableData();

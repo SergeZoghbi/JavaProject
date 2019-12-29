@@ -50,7 +50,6 @@ public class UserLogic {
             }
             return listofCir;
         } else {
-
             Object[][] listofCir = new Object[CirculaireStore.size()][];
             int j = 0;
             for (Circulaire Cir : CirculaireStore) {

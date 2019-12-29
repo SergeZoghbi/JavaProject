@@ -13,9 +13,14 @@ public class DashboardDropDownDataRepository {
     }
 
 
-    public ResultSet CallGetProcedures(String procedureName) throws SQLException {
+    public ResultSet CallGetProcedures(String procedureName) {
         String query = "{ call " + procedureName + "() }";
-        CallableStatement statement = this.mySQLConnection.connection.prepareCall(query);
-        return statement.executeQuery();
+        try {
+            CallableStatement statement = this.mySQLConnection.connection.prepareCall(query);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
