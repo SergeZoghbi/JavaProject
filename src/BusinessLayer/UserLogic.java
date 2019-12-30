@@ -3,6 +3,7 @@ package BusinessLayer;
 import Common.MD5;
 import DataAccess.FacadeClass;
 import Models.Circulaire;
+import Presentation.UserUIMain;
 import com.google.gson.Gson;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -22,13 +23,16 @@ public class UserLogic {
 
     public void AddNewCirculaire(String uid, String titre, String faculte, String contenu) {
         facadeClass.AddCirculaire(titre, faculte, contenu);
-        Circulaire circulaire = new Circulaire();
-        circulaire.title = titre;
-        circulaire.faculty_name = faculte;
-        circulaire.content = contenu;
         DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
-        circulaire.date = dateFormat.format(new Date());
-        CirculaireStore.add(circulaire);
+        String date = dateFormat.format(new Date());
+        if (UserUIMain.filteredDate.contains(date)) {
+            Circulaire circulaire = new Circulaire();
+            circulaire.title = titre;
+            circulaire.faculty_name = faculte;
+            circulaire.content = contenu;
+            circulaire.date = date;
+            CirculaireStore.add(circulaire);
+        }
         facadeClass.LogCirculaireAdded(uid);
     }
 
@@ -61,7 +65,7 @@ public class UserLogic {
     }
 
 
-    public Object[][] filterData(String uid, String date,String fac_name) {
+    public Object[][] filterData(String uid, String date, String fac_name) {
         facadeClass.LogSearch(uid, date);
         CirculaireStore.clear();
         DBCursor results = facadeClass.getCirculairesByDate(date, fac_name);

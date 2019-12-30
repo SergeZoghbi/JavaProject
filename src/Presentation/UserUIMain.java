@@ -25,6 +25,7 @@ public class UserUIMain {
     private Object[][] data = null;
     private String uid = "";
     private String fac_name = "";
+    public static String filteredDate = "";
 
 
     public UserUIMain() {
@@ -142,7 +143,7 @@ public class UserUIMain {
 
                 DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
                 String date = dateFormat.format(propertyChangeEvent.getNewValue());
-
+                filteredDate = date;
                 new Thread(() -> {
 
                     data = userLogic.filterData(uni_id, date, this.fac_name);
