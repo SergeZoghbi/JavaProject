@@ -34,6 +34,7 @@ public class AdminUIMain {
     private JTable jTable;
     private Object[][] data = null;
     private String adminName = "";
+    public static String filterId = "";
 
     public AdminUIMain() {
         adminLogic = new AdminLogic();
@@ -273,7 +274,7 @@ public class AdminUIMain {
 
 
         searchUserButton.addActionListener(actionEvent -> {
-
+            filterId = searchArea.getText();
             new Thread(() -> {
                 data = adminLogic.getFilteredUsers(searchArea.getText());
                 jTable.setModel(new DefaultTableModel(data, columnsNames));
@@ -286,8 +287,6 @@ public class AdminUIMain {
         exitEditButton.addActionListener(actionEvent -> System.exit(0));
 
         backEditButton.addActionListener(actionEvent -> {
-
-//            jFrame.setVisible(true);
             run(this.adminName);
             editFrame.setVisible(false);
         });
@@ -381,11 +380,8 @@ public class AdminUIMain {
         });
 
         int actionChosen = addDialog.show();
-        System.out.println(actionChosen);
         if (actionChosen == 0) {
             if (!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
-
-
                 String isAdded = adminLogic.AddUser(firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
                         facChosen[0], oldUniChosen[0], oldSchoolChosen[0]);
 

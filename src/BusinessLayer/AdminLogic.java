@@ -6,6 +6,7 @@ import Models.Faculty;
 import Models.School;
 import Models.University;
 import Models.User;
+import Presentation.AdminUIMain;
 import com.google.gson.Gson;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -31,16 +32,20 @@ public class AdminLogic {
 
 
         String IdUni = facadeClass.AddUser(fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
+
         if (!IdUni.equals("-1")) {
-            User userAdded = new User();
-            userAdded.ID_UNI = IdUni;
-            userAdded.FIRST_NAME = fn;
-            userAdded.LAST_NAME = ln;
-            userAdded.FACULTY_NAME = fac;
-            userAdded.SCHOOL_NAME = oldSchool;
-            userAdded.UNIVERSITY_NAME = oldUni;
-            userAdded.TYPE = type;
-            userStore.add(userAdded);
+            if(IdUni.contains(AdminUIMain.filterId))
+            {
+                User userAdded = new User();
+                userAdded.ID_UNI = IdUni;
+                userAdded.FIRST_NAME = fn;
+                userAdded.LAST_NAME = ln;
+                userAdded.FACULTY_NAME = fac;
+                userAdded.SCHOOL_NAME = oldSchool;
+                userAdded.UNIVERSITY_NAME = oldUni;
+                userAdded.TYPE = type;
+                userStore.add(userAdded);
+            }
         }
         return IdUni;
     }
