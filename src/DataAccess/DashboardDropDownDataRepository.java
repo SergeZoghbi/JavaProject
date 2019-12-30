@@ -8,8 +8,14 @@ public class DashboardDropDownDataRepository {
 
     private MySQLConnection mySQLConnection;
 
-    public DashboardDropDownDataRepository() throws SQLException, ClassNotFoundException {
-        this.mySQLConnection = MySQLConnection.getMySQLConnection();
+    public DashboardDropDownDataRepository()  {
+        try {
+            this.mySQLConnection = MySQLConnection.getMySQLConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 

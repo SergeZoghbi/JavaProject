@@ -22,7 +22,7 @@ import java.awt.event.MouseListener;
 public class AdminUIMain {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private AdminLogic adminLogic;
+    private AdminLogic adminLogic = new AdminLogic();
     private JFrame jFrame;
 
     private JPanel firstTwoChartsPanel;
@@ -37,7 +37,6 @@ public class AdminUIMain {
     public static String filterId = "";
 
     public AdminUIMain() {
-        adminLogic = new AdminLogic();
         adminLogic.fillUniverstiesArrayList();
         adminLogic.fillSchoolArrayList();
         adminLogic.fillFacultiesArrayList();

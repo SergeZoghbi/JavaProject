@@ -8,8 +8,14 @@ public class LogsRepository {
     private CallableStatement statement;
     private MySQLConnection mySQLConnection;
 
-    public LogsRepository() throws SQLException, ClassNotFoundException {
-        this.mySQLConnection = MySQLConnection.getMySQLConnection();
+    public LogsRepository() {
+        try {
+            this.mySQLConnection = MySQLConnection.getMySQLConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 

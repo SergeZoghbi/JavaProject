@@ -8,7 +8,6 @@ import java.sql.SQLException;
 public class FacadeClass {
 
     private static FacadeClass facadeClass;
-
     private CirculaireRepository circulaireRepository;
     private DashboardDropDownDataRepository dashboardDropDownDataRepository;
     private LogsRepository logsRepository;
@@ -16,14 +15,11 @@ public class FacadeClass {
 
 
     private FacadeClass() {
-        try {
-            this.circulaireRepository = new CirculaireRepository();
-            this.dashboardDropDownDataRepository = new DashboardDropDownDataRepository();
-            this.logsRepository = new LogsRepository();
-            this.userRepository = new UserRepository();
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        this.circulaireRepository = new CirculaireRepository();
+        this.dashboardDropDownDataRepository = new DashboardDropDownDataRepository();
+        this.logsRepository = new LogsRepository();
+        this.userRepository = new UserRepository();
 
     }
 
@@ -47,7 +43,7 @@ public class FacadeClass {
         return this.circulaireRepository.getLastCirculaire(facName);
     }
 
-    public ResultSet AccountInfo(String UNI_ID)  {
+    public ResultSet AccountInfo(String UNI_ID) {
         return this.userRepository.AccountInfo(UNI_ID);
     }
 
@@ -80,7 +76,7 @@ public class FacadeClass {
         return this.userRepository.ResetPassword(UNI_ID);
     }
 
-    public ResultSet CallGetProcedures(String procedureName){
+    public ResultSet CallGetProcedures(String procedureName) {
         return this.dashboardDropDownDataRepository.CallGetProcedures(procedureName);
     }
 

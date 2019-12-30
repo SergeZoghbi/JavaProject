@@ -1,7 +1,6 @@
 package Presentation;
 
 import BusinessLayer.LoginFrameLogic;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,20 +12,20 @@ public class LoginFrameMain {
 
     private LoginFrameLogic loginFrameLogic;
 
+
     public LoginFrameMain() {
         loginFrameLogic = new LoginFrameLogic();
+
     }
 
     private JFrame jFrame;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
 
     private void InitializeFrame() {
         jFrame = new JFrame();
         jFrame.setLayout(new GridLayout(4, 1, 0, 0));
         jFrame.setSize(screenSize.width / 2, screenSize.height / 2);
         jFrame.setResizable(false);
-
     }
 
     private void InitializeTopPanel() {

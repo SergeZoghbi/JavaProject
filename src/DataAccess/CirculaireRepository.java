@@ -1,14 +1,11 @@
 package DataAccess;
 
-import Models.Circulaire;
 import com.mongodb.*;
 import org.bson.types.ObjectId;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CirculaireRepository {
 

@@ -11,8 +11,14 @@ public class UserRepository {
     private MySQLConnection mySQLConnection;
     private ResultSet resultSet;
 
-    public UserRepository() throws SQLException, ClassNotFoundException {
-        this.mySQLConnection = MySQLConnection.getMySQLConnection();
+    public UserRepository()  {
+        try {
+            this.mySQLConnection = MySQLConnection.getMySQLConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 

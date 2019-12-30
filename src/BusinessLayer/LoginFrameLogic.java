@@ -11,9 +11,14 @@ import java.net.URL;
 
 public class LoginFrameLogic {
 
+    private FacadeClass facadeClass;
+
+    public LoginFrameLogic(){
+        facadeClass = FacadeClass.getInstance();
+    }
+
     public int CheckAuthentication(String user_id, char[] password) {
         String passwd = CharArrayToString(password);
-        FacadeClass facadeClass = FacadeClass.getInstance();
         return facadeClass.Login(user_id, MD5.getMd5(passwd));
 
     }
@@ -43,7 +48,7 @@ public class LoginFrameLogic {
                     response.append(readLine);
                 }
                 in.close();
-                return response.toString().split(":")[5].split(",")[0];
+                return response.toString().split(":")[5].split("\",")[0]+"\"";
             } else {
 //                System.out.println("GET NOT WORKED");
                 return "No more quotes left ... :(";
