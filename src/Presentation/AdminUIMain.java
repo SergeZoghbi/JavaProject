@@ -305,86 +305,65 @@ public class AdminUIMain {
 
     private void InitializeAddUserFrame() {
 
-        JFrame popupFrame = new JFrame();
-        popupFrame.setLayout(new BorderLayout());
-        popupFrame.setSize(screenSize.width / 3, screenSize.height / 3);
-        popupFrame.setResizable(false);
-
-        JPanel popupPanel = new JPanel();
-        popupPanel.setLayout(new GridLayout(6, 2, 10, 10));
-
+        AddOrEditDialog addDialog = new AddOrEditDialog();
+        addDialog.setTitle("Add User");
+        addDialog.setOptions(new String[]{"Add"});
 
         JLabel firstNameLabel = new JLabel("First Name ");
         JTextField firstNameTextArea = new JTextField();
-        popupPanel.add(firstNameLabel);
-        popupPanel.add(firstNameTextArea);
-
+        addDialog.addComponent(firstNameLabel);
+        addDialog.addComponent(firstNameTextArea);
 
         JLabel lastNameLabel = new JLabel("Last Name ");
         JTextField lastNameTextArea = new JTextField();
-        popupPanel.add(lastNameLabel);
-        popupPanel.add(lastNameTextArea);
-
+        addDialog.addComponent(lastNameLabel);
+        addDialog.addComponent(lastNameTextArea);
 
         JLabel typeLabel = new JLabel("Type ");
-        String[] type = {"student", "conseiller"};
+        String[] type = {"Student", "Conseiller"};
         JComboBox typeComboBox = new JComboBox(type);
-        popupPanel.add(typeLabel);
-        popupPanel.add(typeComboBox);
+        typeComboBox.setSelectedItem("None");
+        addDialog.addComponent(typeLabel);
+        addDialog.addComponent(typeComboBox);
 
 
         JLabel facultyLabel = new JLabel("Faculty ");
         String[] faculties = adminLogic.getFaculties();
         JComboBox facComboBox = new JComboBox(faculties);
-        facComboBox.setSelectedItem("None");
-        popupPanel.add(facultyLabel);
-        popupPanel.add(facComboBox);
+        addDialog.addComponent(facultyLabel);
+        addDialog.addComponent(facComboBox);
 
 
         JLabel exUniLabel = new JLabel("Old University ");
         String[] unies = adminLogic.getUniversities();
         JComboBox uniesComboBox = new JComboBox(unies);
         uniesComboBox.setSelectedItem("None");
-        popupPanel.add(exUniLabel);
-        popupPanel.add(uniesComboBox);
+        addDialog.addComponent(exUniLabel);
+        addDialog.addComponent(uniesComboBox);
 
 
         JLabel exSchoolLabel = new JLabel("Old School ");
         String[] schools = adminLogic.getSchools();
         JComboBox schoolsComboBox = new JComboBox(schools);
         schoolsComboBox.setSelectedItem("None");
-        popupPanel.add(exSchoolLabel);
-        popupPanel.add(schoolsComboBox);
+        addDialog.addComponent(exSchoolLabel);
+        addDialog.addComponent(schoolsComboBox);
 
 
-        JPanel popupLowerPanel = new JPanel();
-        popupLowerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-        JButton submitButton = new JButton("Submit");
-        popupLowerPanel.add(submitButton);
-
-        JButton cancelButton = new JButton("Cancel");
-        popupLowerPanel.add(cancelButton);
-
-        popupFrame.add(popupPanel);
-        popupFrame.add(popupLowerPanel, BorderLayout.SOUTH);
-        popupFrame.setVisible(true);
-
-
-        final String[] typeChosen = {"student"};
+        final String[] typeChosen = {"Student"};
         typeComboBox.addItemListener(itemEvent -> {
-            if (itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")) {
-                typeChosen[0] = "student";
+            if (itemEvent.getItemSelectable().getSelectedObjects()[0].equals("Student")) {
+                typeChosen[0] = "Student";
                 uniesComboBox.setEnabled(true);
                 schoolsComboBox.setEnabled(true);
             } else {
-                typeChosen[0] = "conseiller";
+                typeChosen[0] = "Conseiller";
                 uniesComboBox.setEnabled(false);
                 schoolsComboBox.setEnabled(false);
             }
         });
 
-        final String[] facChosen = {"None"};
+        final String[] facChosen = {faculties[0]};
         facComboBox.addItemListener(itemEvent -> {
             facChosen[0] = itemEvent.getItem().toString();
         });
@@ -399,129 +378,95 @@ public class AdminUIMain {
             oldSchoolChosen[0] = itemEvent.getItem().toString();
         });
 
-
-        submitButton.addActionListener(actionEvent -> {
+        int actionChosen = addDialog.show();
+        System.out.println(actionChosen);
+        if (actionChosen == 0) {
             if (!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
-
+                System.out.println("ana hon "+ facChosen[0]);
                 String isAdded = adminLogic.AddUser(firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
                         facChosen[0], oldUniChosen[0], oldSchoolChosen[0]);
-                if (!isAdded.equals("-1")) {
 
+                if (!isAdded.equals("-1")) {
                     new Thread(() -> {
                         data = adminLogic.getTableData();
                         jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
-                        popupFrame.setVisible(false);
                     }).start();
-
-                } else {
-                    popupFrame.setForeground(Color.RED);
 
                 }
             }
-        });
-
-        cancelButton.addActionListener(actionEvent -> popupFrame.setVisible(false));
-
+        }
     }
 
     private void InitializeEditOrDeleteUserFrame(String uniId, String fn, String ln, String usertype, String fac, String olduni, String oldschool) {
 
-        editFrame.setVisible(false);
-        JFrame popupFrame = new JFrame();
-        popupFrame.setLayout(new BorderLayout());
-        popupFrame.setSize(screenSize.width / 3, screenSize.height / 3);
-        popupFrame.setResizable(false);
-        popupFrame.setVisible(true);
-
-        JPanel popupPanel = new JPanel();
-        popupPanel.setLayout(new GridLayout(7, 2, 10, 10));
-
+        AddOrEditDialog editDialog = new AddOrEditDialog();
+        editDialog.setTitle("Edit User");
+        editDialog.setOptions(new String[]{"Reset Password", "Edit", "Delete"});
 
         JLabel uniIDLabel = new JLabel("Uni id ");
         JTextField uniIDTextField = new JTextField(uniId);
         uniIDTextField.setEditable(false);
-        popupPanel.add(uniIDLabel);
-        popupPanel.add(uniIDTextField);
+        editDialog.addComponent(uniIDLabel);
+        editDialog.addComponent(uniIDTextField);
 
         JLabel firstNameLabel = new JLabel("First Name ");
         JTextField firstNameTextArea = new JTextField(fn);
-        popupPanel.add(firstNameLabel);
-        popupPanel.add(firstNameTextArea);
+        editDialog.addComponent(firstNameLabel);
+        editDialog.addComponent(firstNameTextArea);
 
 
         JLabel lastNameLabel = new JLabel("Last Name ");
         JTextField lastNameTextArea = new JTextField(ln);
-        popupPanel.add(lastNameLabel);
-        popupPanel.add(lastNameTextArea);
+        editDialog.addComponent(lastNameLabel);
+        editDialog.addComponent(lastNameTextArea);
 
 
         JLabel typeLabel = new JLabel("Type ");
-        String[] type = {usertype, "student", "conseiller"};
+        String[] type = {"Student", "Conseiller"};
         JComboBox userTypeComboBox = new JComboBox(type);
-        popupPanel.add(typeLabel);
-        popupPanel.add(userTypeComboBox);
+        userTypeComboBox.setSelectedItem(usertype);
+        editDialog.addComponent(typeLabel);
+        editDialog.addComponent(userTypeComboBox);
 
 
         JLabel facultyLabel = new JLabel("Faculty ");
         String[] faculties = adminLogic.getFaculties();
         JComboBox facComboBox = new JComboBox(faculties);
         facComboBox.setSelectedItem(fac);
-        popupPanel.add(facultyLabel);
-        popupPanel.add(facComboBox);
+        editDialog.addComponent(facultyLabel);
+        editDialog.addComponent(facComboBox);
 
 
         JLabel exUniLabel = new JLabel("Old University ");
         String[] unies = adminLogic.getUniversities();
         JComboBox uniesComboBox = new JComboBox(unies);
         uniesComboBox.setSelectedItem(olduni);
-        popupPanel.add(exUniLabel);
-        popupPanel.add(uniesComboBox);
+        editDialog.addComponent(exUniLabel);
+        editDialog.addComponent(uniesComboBox);
 
 
         JLabel exSchoolLabel = new JLabel("Old School ");
         String[] schools = adminLogic.getSchools();
         JComboBox schoolsComboBox = new JComboBox(schools);
         schoolsComboBox.setSelectedItem(oldschool);
-        popupPanel.add(exSchoolLabel);
-        popupPanel.add(schoolsComboBox);
-
-
-        JPanel popupLowerPanel = new JPanel();
-        popupLowerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-        JButton resetPassword = new JButton("Reset Password");
-        popupLowerPanel.add(resetPassword);
-
-        JButton editButton = new JButton("Edit");
-        popupLowerPanel.add(editButton);
-
-        JButton deleteButton = new JButton("Delete");
-        popupLowerPanel.add(deleteButton);
-
-        JButton cancelButton = new JButton("Cancel");
-        popupLowerPanel.add(cancelButton);
-
-
-        popupFrame.add(popupPanel);
-        popupFrame.add(popupLowerPanel, BorderLayout.SOUTH);
-        popupFrame.setVisible(true);
-
+        editDialog.addComponent(exSchoolLabel);
+        editDialog.addComponent(schoolsComboBox);
 
         final String[] typeChosen = {usertype};
 
-        if (!typeChosen[0].equals("student")) {
+        if (!typeChosen[0].equals("Student")) {
             schoolsComboBox.setEnabled(false);
             uniesComboBox.setEnabled(false);
         }
 
         userTypeComboBox.addItemListener(itemEvent -> {
 
-            if (!itemEvent.getItemSelectable().getSelectedObjects()[0].equals("student")) {
-                typeChosen[0] = "conseiller";
+            if (!itemEvent.getItemSelectable().getSelectedObjects()[0].equals("Student")) {
+                typeChosen[0] = "Conseiller";
                 schoolsComboBox.setEnabled(false);
                 uniesComboBox.setEnabled(false);
             } else {
-                typeChosen[0] = "student";
+                typeChosen[0] = "Student";
                 uniesComboBox.setEnabled(true);
                 schoolsComboBox.setEnabled(true);
             }
@@ -542,10 +487,10 @@ public class AdminUIMain {
         schoolsComboBox.addItemListener(itemEvent -> {
             oldSchoolChosen[0] = itemEvent.getItem().toString();
         });
+        int actionChosen = editDialog.show();
 
-        editButton.addActionListener(actionEvent -> {
-
-            Boolean ed = adminLogic.EditUser(uniIDTextField.getText(), firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
+        if (actionChosen == 1) {
+            boolean ed = adminLogic.EditUser(uniIDTextField.getText(), firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
                     facChosen[0], oldUniChosen[0], oldSchoolChosen[0]);
 
             if (ed) {
@@ -555,17 +500,11 @@ public class AdminUIMain {
                     jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
                 }).start();
 
-
-                popupFrame.setVisible(false);
-                editFrame.setVisible(true);
             } else {
                 System.out.println("Not edited");
             }
-        });
-
-        deleteButton.addActionListener(actionEvent -> {
-            Boolean del = adminLogic.DeleteUser(uniIDTextField.getText());
-
+        } else if (actionChosen == 2) {
+            boolean del = adminLogic.DeleteUser(uniIDTextField.getText());
             if (del) {
 
                 new Thread(() -> {
@@ -573,27 +512,12 @@ public class AdminUIMain {
                     jTable.setModel(new DefaultTableModel(data, adminLogic.getColumnNames()));
                 }).start();
 
-
-                popupFrame.setVisible(false);
-                editFrame.setVisible(true);
             } else {
                 System.out.println("Not deleted");
             }
-        });
-
-        cancelButton.addActionListener(actionEvent -> {
-            popupFrame.setVisible(false);
-            editFrame.setVisible(true);
-        });
-
-        resetPassword.addActionListener(actionEvent -> {
+        } else if (actionChosen == 0) {
             adminLogic.ResetPassword(uniId);
-            popupFrame.setVisible(true);
-        });
-
-        popupFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-
+        }
     }
 
     public void run(String adminName) {

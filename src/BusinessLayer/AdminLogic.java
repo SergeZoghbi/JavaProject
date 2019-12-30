@@ -79,7 +79,7 @@ public class AdminLogic {
     }
 
     private int mapTypeToInt(String type) {
-        return type.equals("student") ? 2 : 3;
+        return type.equals("Student") ? 2 : 3;
     }
 
     private int mapFacNameToId(String facName) {
@@ -176,6 +176,7 @@ public class AdminLogic {
     }
 
     public Object[][] getFilteredUsers(String u_id) {
+        System.out.println("Filtring Data");
         ResultSet rs = this.facadeClass.AccountInfo(u_id);
         userStore.clear();
         JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
@@ -275,10 +276,12 @@ public class AdminLogic {
     public Object[][] getTableData() {
 
         if (userStore == null) {
+            System.out.println("am jiboun men db");
             userStore = new ArrayList<>();
             ResultSet rs = this.facadeClass.CallGetProcedures("getLastTenUsers");
-            Object[][] listOfUsers = new Object[10][];
             JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
+            Object[][] listOfUsers = new Object[jsonArray.length()][];
+
             int i = 0;
             for (Object json : jsonArray) {
                 User user = new Gson().fromJson(json.toString(), User.class);
@@ -288,6 +291,7 @@ public class AdminLogic {
             }
             return listOfUsers;
         } else {
+            System.out.println("Array return");
             Object[][] listOfusers = new Object[userStore.size()][];
             int j = 0;
             for (User user : userStore) {
