@@ -358,6 +358,8 @@ public class AdminUIMain {
                 schoolsComboBox.setEnabled(true);
             } else {
                 typeChosen[0] = "Conseiller";
+                uniesComboBox.setSelectedItem("None");
+                schoolsComboBox.setSelectedItem("None");
                 uniesComboBox.setEnabled(false);
                 schoolsComboBox.setEnabled(false);
             }
@@ -382,7 +384,8 @@ public class AdminUIMain {
         System.out.println(actionChosen);
         if (actionChosen == 0) {
             if (!facChosen[0].equals("None") && !facChosen[0].equals(" ")) {
-                System.out.println("ana hon "+ facChosen[0]);
+
+
                 String isAdded = adminLogic.AddUser(firstNameTextArea.getText(), lastNameTextArea.getText(), typeChosen[0],
                         facChosen[0], oldUniChosen[0], oldSchoolChosen[0]);
 

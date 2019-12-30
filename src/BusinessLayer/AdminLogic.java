@@ -176,7 +176,6 @@ public class AdminLogic {
     }
 
     public Object[][] getFilteredUsers(String u_id) {
-        System.out.println("Filtring Data");
         ResultSet rs = this.facadeClass.AccountInfo(u_id);
         userStore.clear();
         JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
@@ -276,7 +275,6 @@ public class AdminLogic {
     public Object[][] getTableData() {
 
         if (userStore == null) {
-            System.out.println("am jiboun men db");
             userStore = new ArrayList<>();
             ResultSet rs = this.facadeClass.CallGetProcedures("getLastTenUsers");
             JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
@@ -291,7 +289,6 @@ public class AdminLogic {
             }
             return listOfUsers;
         } else {
-            System.out.println("Array return");
             Object[][] listOfusers = new Object[userStore.size()][];
             int j = 0;
             for (User user : userStore) {
