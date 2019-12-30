@@ -14,6 +14,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.json.JSONArray;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormatSymbols;
@@ -34,8 +35,7 @@ public class AdminLogic {
         String IdUni = facadeClass.AddUser(fn, ln, mapFacNameToId(fac), mapSchoolNameToId(oldSchool), mapTypeToInt(type), mapUniNameToId(oldUni));
 
         if (!IdUni.equals("-1")) {
-            if(IdUni.contains(AdminUIMain.filterId))
-            {
+            if (IdUni.contains(AdminUIMain.filterId)) {
                 User userAdded = new User();
                 userAdded.ID_UNI = IdUni;
                 userAdded.FIRST_NAME = fn;
@@ -52,7 +52,7 @@ public class AdminLogic {
 
     public boolean DeleteUser(String id) {
 
-        if(facadeClass.DeleteUser(id) == 1){
+        if (facadeClass.DeleteUser(id) == 1) {
             userStore.removeIf(user -> user.ID_UNI.equals(id));
             return true;
         }
@@ -105,8 +105,8 @@ public class AdminLogic {
         return allFaculties;
     }
 
-    public void fillFacultiesArrayList(){
-        if(faculties == null){
+    public void fillFacultiesArrayList() {
+        if (faculties == null) {
             faculties = new ArrayList<>();
             ResultSet rs = facadeClass.CallGetProcedures("getAllFaculties");
             JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
@@ -136,8 +136,8 @@ public class AdminLogic {
 
     }
 
-    public void fillSchoolArrayList(){
-        if(schools == null){
+    public void fillSchoolArrayList() {
+        if (schools == null) {
             schools = new ArrayList<>();
             ResultSet rs = facadeClass.CallGetProcedures("getAllSchools");
             JSONArray jsonArray = ResultSetToJSON.convertToJSON(rs);
@@ -166,8 +166,8 @@ public class AdminLogic {
         return allUnis;
     }
 
-    public void fillUniverstiesArrayList(){
-        if(universities == null){
+    public void fillUniverstiesArrayList() {
+        if (universities == null) {
             universities = new ArrayList<>();
             ResultSet rs = facadeClass.CallGetProcedures("getAllUniversities");
 
@@ -307,11 +307,6 @@ public class AdminLogic {
 
     public void ResetPassword(String uniID) {
         facadeClass.ResetPassword(uniID);
-    }
-
-
-    public void Logout(String id) {
-        facadeClass.Log_auth(id);
     }
 
 

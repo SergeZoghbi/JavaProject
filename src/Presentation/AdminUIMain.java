@@ -61,7 +61,6 @@ public class AdminUIMain {
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(actionEvent -> {
             jFrame.setVisible(false);
-            adminLogic.Logout(adminName);
             new LoginFrameMain().run();
         });
 
@@ -69,7 +68,6 @@ public class AdminUIMain {
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                adminLogic.Logout(adminName);
                 System.exit(0);
             }
         });
