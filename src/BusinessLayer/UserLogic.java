@@ -25,8 +25,7 @@ public class UserLogic {
         facadeClass.AddCirculaire(titre, faculte, contenu);
         DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
         String date = dateFormat.format(new Date());
-        System.out.println("ADding Circ");
-        if (UserUIMain.filteredDate.contains(date)) {
+        if (date.contains(UserUIMain.filteredDate)) {
             Circulaire circulaire = new Circulaire();
             circulaire.title = titre;
             circulaire.faculty_name = faculte;
