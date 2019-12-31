@@ -144,17 +144,9 @@ public class UserUIMain {
                 DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
                 String date = dateFormat.format(propertyChangeEvent.getNewValue());
                 filteredDate = date;
-                new Thread(() -> {
-
                     data = userLogic.filterData(uni_id, date, this.fac_name);
 
-//                        jTable.revalidate();
-//                        jTable.repaint();
-
-//                        InitializeCirculaireTablePanel();
                     jTable.setModel(new DefaultTableModel(data, columnsNames));
-
-                }).start();
 
             }
 

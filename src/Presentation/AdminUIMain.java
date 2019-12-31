@@ -272,11 +272,8 @@ public class AdminUIMain {
 
         searchUserButton.addActionListener(actionEvent -> {
             filterId = searchArea.getText();
-            new Thread(() -> {
                 data = adminLogic.getFilteredUsers(searchArea.getText());
                 jTable.setModel(new DefaultTableModel(data, columnsNames));
-            }).start();
-
         });
 
         addUserButton.addActionListener(actionEvent -> InitializeAddUserFrame());
