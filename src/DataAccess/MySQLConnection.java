@@ -11,7 +11,7 @@ public class MySQLConnection {
 
     private MySQLConnection() throws ClassNotFoundException, SQLException {
         String driver = "org.gjt.mm.mysql.Driver";
-        String url = "jdbc:mysql://localhost:3306/JavaProjectDB?autoReconnect=true&useSSL=false";
+        String url = "jdbc:mysql://localhost:3307/JavaProjectDB?autoReconnect=true&useSSL=false";
         String userName = "root";
         String password = "123456";
         Class.forName(driver);

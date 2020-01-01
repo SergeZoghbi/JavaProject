@@ -245,10 +245,13 @@ public class AdminLogic {
         final XYSeries series1 = new XYSeries("Student");
         try {
             ResultSet rs = this.facadeClass.CallGetProcedures("getActivityStudent");
+
             while (rs.next()) {
 
                 series1.add(Double.parseDouble(rs.getString("DAY")), Double.parseDouble(rs.getString("NB_OF_STUDENT")));
+
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -257,9 +260,13 @@ public class AdminLogic {
         final XYSeries series2 = new XYSeries("Conseiller");
         try {
             ResultSet rs = this.facadeClass.CallGetProcedures("getActivityConsiller");
+
             while (rs.next()) {
+
                 series2.add(Double.parseDouble(rs.getString("DAY")), Double.parseDouble(rs.getString("NB_OF_CONSILLER")));
+
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -272,6 +279,44 @@ public class AdminLogic {
 
         return dataset;
     }
+
+    public int[] getEntriesData(){
+
+
+        int[] dataset = new int[2];
+
+        try {
+            ResultSet rs = this.facadeClass.CallGetProcedures("getActivityStudent");
+
+            while (rs.next()) {
+
+             dataset[0] += Integer.parseInt(rs.getString("NB_OF_STUDENT"));
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            ResultSet rs = this.facadeClass.CallGetProcedures("getActivityConsiller");
+
+            while (rs.next()) {
+
+                  dataset[1] += Integer.parseInt(rs.getString("NB_OF_CONSILLER"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return dataset;
+    }
+
+
+
 
     public String[] getColumnNames() {
         return new String[]{"University ID", "First Name", "Last Name", "Type", "Faculty", "Old University", "School Name", "View"};

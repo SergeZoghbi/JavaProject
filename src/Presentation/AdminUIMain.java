@@ -10,6 +10,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.xy.XYDataset;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -92,13 +93,16 @@ public class AdminUIMain {
         jPanel.setBackground(new Color(250, 250, 250, 250));
 
 
+        thirdChartPanel = new JPanel();
+        thirdChartPanel.setLayout(new GridLayout(1, 2, 0, 0));
+        jPanel.add(thirdChartPanel);
+
+
         firstTwoChartsPanel = new JPanel();
         firstTwoChartsPanel.setLayout(new GridLayout(1, 2, 0, 0));
         jPanel.add(firstTwoChartsPanel);
 
-        thirdChartPanel = new JPanel();
-        thirdChartPanel.setLayout(new GridLayout(1, 1, 0, 0));
-        jPanel.add(thirdChartPanel);
+
 
         jFrame.add(jPanel, BorderLayout.CENTER);
 
@@ -140,22 +144,67 @@ public class AdminUIMain {
     }
 
     private void addLineChart() {
-        xyDataset = adminLogic.createLineChartDataset();
-        final JFreeChart chart = ChartFactory.createXYLineChart(
-                adminLogic.getLineChartName(),      // chart title
-                "Day",                      // x axis label
-                "Number of Entries",                      // y axis label
-                xyDataset,                  // data
-                PlotOrientation.VERTICAL,
-                true,                     // include legend
-                true,                     // tooltips
-                false                     // urls
-        );
+//        xyDataset = adminLogic.createLineChartDataset();
+//        final JFreeChart chart = ChartFactory.createXYLineChart(
+//                adminLogic.getLineChartName(),      // chart title
+//                "Day",                      // x axis label
+//                "Number of Entries",                      // y axis label
+//                xyDataset,                  // data
+//                PlotOrientation.VERTICAL,
+//                true,                     // include legend
+//                true,                     // tooltips
+//                false                     // urls
+//        );
+//
+//
+//        ChartPanel lineChartPanel = new ChartPanel(chart);
+//        thirdChartPanel.add(lineChartPanel);
+
+        JPanel studentEntriesPanel = new JPanel();
+        studentEntriesPanel.setLayout(new BorderLayout());
+        studentEntriesPanel.add(new Component() {} , BorderLayout.NORTH);
+        studentEntriesPanel.add(new Component() {} , BorderLayout.SOUTH);
+        studentEntriesPanel.add(new Component() {} , BorderLayout.EAST);
+        studentEntriesPanel.add(new Component() {} , BorderLayout.WEST);
+        JPanel conseillerEntriesPanel = new JPanel();
+        conseillerEntriesPanel.setLayout(new BorderLayout());
+        conseillerEntriesPanel.add(new Component() {} , BorderLayout.NORTH);
+        conseillerEntriesPanel.add(new Component() {} , BorderLayout.SOUTH);
+        conseillerEntriesPanel.add(new Component() {} , BorderLayout.EAST);
+        conseillerEntriesPanel.add(new Component() {} , BorderLayout.WEST);;
+
+        int[] statistics = adminLogic.getEntriesData();
 
 
-        ChartPanel lineChartPanel = new ChartPanel(chart);
 
-        thirdChartPanel.add(lineChartPanel);
+
+        studentEntriesPanel.add(new JLabel("<html>\n" +
+                "<div style='border-style: solid;height:120px;width:365px'>"+
+                "<pre style='font-size: 20px;margin-left:10px'>" +
+                "<br>"+
+                statistics[0]+
+                "|"+
+                "Number Of Students   <br>    in last 10 days"+
+                "</pre>"+
+                "</div>"+
+                "</html>\n"), BorderLayout.CENTER);
+
+        conseillerEntriesPanel.add(new JLabel("<html>\n"+
+                "<div style='border-style: solid;height:120px;width:365px'>"+
+                "<pre style='font-size: 20px;margin-left:10px'>" +
+                        "<br>"+
+                        statistics[1]+
+                        "|"+
+                        "Number Of Conseillers   <br>    in last 10 days"+
+                        "</pre>"+
+                        "</div>"+
+                        "</html>\n"), BorderLayout.CENTER);
+
+
+        studentEntriesPanel.setBackground(new Color(255,255,255));
+        conseillerEntriesPanel.setBackground(new Color(255,255,255));
+        thirdChartPanel.add(studentEntriesPanel);
+        thirdChartPanel.add(conseillerEntriesPanel);
 
     }
 
