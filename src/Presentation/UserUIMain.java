@@ -76,7 +76,7 @@ public class UserUIMain {
             centralPanel.add(newPasswordField);
 
 
-            centralPanel.add(new JLabel("New Password(x2)"));
+            centralPanel.add(new JLabel("Retype New Password"));
             JPasswordField newPasswordField2 = new JPasswordField();
             centralPanel.add(newPasswordField2);
 
