@@ -144,21 +144,6 @@ public class AdminUIMain {
     }
 
     private void addLineChart() {
-//        xyDataset = adminLogic.createLineChartDataset();
-//        final JFreeChart chart = ChartFactory.createXYLineChart(
-//                adminLogic.getLineChartName(),      // chart title
-//                "Day",                      // x axis label
-//                "Number of Entries",                      // y axis label
-//                xyDataset,                  // data
-//                PlotOrientation.VERTICAL,
-//                true,                     // include legend
-//                true,                     // tooltips
-//                false                     // urls
-//        );
-//
-//
-//        ChartPanel lineChartPanel = new ChartPanel(chart);
-//        thirdChartPanel.add(lineChartPanel);
 
         JPanel studentEntriesPanel = new JPanel();
         studentEntriesPanel.setLayout(new BorderLayout());
