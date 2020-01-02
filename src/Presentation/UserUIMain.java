@@ -141,6 +141,7 @@ public class UserUIMain {
             entered[0]++;
             if (entered[0] > 2) {
 
+                System.out.println(propertyChangeEvent.getNewValue());
                 DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
                 String date = dateFormat.format(propertyChangeEvent.getNewValue());
                 filteredDate = date;

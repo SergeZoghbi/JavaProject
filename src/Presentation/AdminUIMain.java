@@ -169,7 +169,7 @@ public class AdminUIMain {
                 "<br>"+
                 statistics[0]+
                 "|"+
-                "Number Of Students   <br>    in last 10 days"+
+                "Student Entries   <br>    in last 10 days"+
                 "</pre>"+
                 "</div>"+
                 "</html>\n"), BorderLayout.CENTER);
@@ -180,7 +180,7 @@ public class AdminUIMain {
                         "<br>"+
                         statistics[1]+
                         "|"+
-                        "Number Of Conseillers   <br>    in last 10 days"+
+                        "Conseiller entries   <br>    in last 10 days"+
                         "</pre>"+
                         "</div>"+
                         "</html>\n"), BorderLayout.CENTER);
